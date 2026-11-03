@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@yield('title', 'Laporan') · HomeStay Go</title>
+    <title>@yield('title', 'Laporan') &mdash; HomeStay Go</title>
     @vite(['resources/css/app.css'])
     <style>
         @media print {

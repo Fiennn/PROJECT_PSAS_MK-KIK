@@ -1,6 +1,11 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\FasilitasController as AdminFasilitasController;
+use App\Http\Controllers\Admin\HomestayVerificationController as AdminHomestayVerificationController;
+use App\Http\Controllers\Admin\LaporanController as AdminLaporanController;
+use App\Http\Controllers\Admin\PembayaranController as AdminPembayaranController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Pemilik\BookingController as PemilikBookingController;
@@ -95,4 +100,25 @@ Route::middleware(['auth', 'active', 'role:admin'])
     ->name('admin.')
     ->group(function () {
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+
+        Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
+        Route::patch('/users/{user}/status', [AdminUserController::class, 'toggleStatus'])->name('users.status');
+
+        Route::get('/homestay', [AdminHomestayVerificationController::class, 'index'])->name('homestay.index');
+        Route::get('/homestay/{homestay}', [AdminHomestayVerificationController::class, 'show'])->name('homestay.show');
+        Route::patch('/homestay/{homestay}/setujui', [AdminHomestayVerificationController::class, 'approve'])->name('homestay.approve');
+        Route::patch('/homestay/{homestay}/tolak', [AdminHomestayVerificationController::class, 'reject'])->name('homestay.reject');
+
+        Route::get('/pembayaran', [AdminPembayaranController::class, 'index'])->name('pembayaran.index');
+        Route::get('/pembayaran/{pembayaran}', [AdminPembayaranController::class, 'show'])->name('pembayaran.show');
+        Route::patch('/pembayaran/{pembayaran}/verifikasi', [AdminPembayaranController::class, 'verify'])->name('pembayaran.verify');
+        Route::patch('/pembayaran/{pembayaran}/tolak', [AdminPembayaranController::class, 'reject'])->name('pembayaran.reject');
+
+        Route::get('/fasilitas', [AdminFasilitasController::class, 'index'])->name('fasilitas.index');
+        Route::post('/fasilitas', [AdminFasilitasController::class, 'store'])->name('fasilitas.store');
+        Route::patch('/fasilitas/{fasilitas}', [AdminFasilitasController::class, 'update'])->name('fasilitas.update');
+        Route::delete('/fasilitas/{fasilitas}', [AdminFasilitasController::class, 'destroy'])->name('fasilitas.destroy');
+
+        Route::get('/laporan/booking', [AdminLaporanController::class, 'booking'])->name('laporan.booking');
+        Route::get('/laporan/pendapatan', [AdminLaporanController::class, 'pendapatan'])->name('laporan.pendapatan');
     });
