@@ -1,0 +1,70 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        @apply bg-sand-50 text-stone-800 antialiased;
+    }
+
+    ::selection {
+        @apply bg-forest-200 text-forest-950;
+    }
+
+    [x-cloak] {
+        display: none !important;
+    }
+}
+
+@layer components {
+    .focus-ring {
+        @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-forest-500 focus-visible:ring-offset-2 focus-visible:ring-offset-sand-50;
+    }
+
+    .field {
+        @apply block w-full rounded-2xl border border-sand-300 bg-white px-4 py-3 text-sm text-stone-800 shadow-sm placeholder:text-stone-400 focus:border-forest-500 focus:outline-none focus:ring-2 focus:ring-forest-200;
+    }
+
+    .field-error {
+        @apply border-red-400 focus:border-red-500 focus:ring-red-100;
+    }
+
+    .label {
+        @apply mb-1.5 block text-sm font-semibold text-stone-700;
+    }
+
+    .hint {
+        @apply mt-1.5 text-xs text-stone-500;
+    }
+
+    .error-text {
+        @apply mt-1.5 text-sm text-red-600;
+    }
+
+    .nav-link {
+        @apply rounded-full px-4 py-2 text-sm font-semibold text-forest-900 transition hover:bg-forest-100;
+    }
+
+    .nav-link-active {
+        @apply bg-forest-700 text-white hover:bg-forest-700;
+    }
+}
+
+@media print {
+    .no-print {
+        display: none !important;
+    }
+
+    body {
+        background: white !important;
+    }
+
+    .print-card {
+        box-shadow: none !important;
+        border: 1px solid #d6d3d1 !important;
+    }
+}
