@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="@yield('meta_description', 'HomeStay Go — pesan homestay dan paket wisata di desa wisata Indonesia dengan mudah.')">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'HomeStay Go') · HomeStay Go</title>
+    <title>@yield('title', 'HomeStay Go') &mdash; HomeStay Go</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
