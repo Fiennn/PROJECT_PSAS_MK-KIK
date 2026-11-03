@@ -1,66 +1,192 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# HomeStay Go
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+HomeStay Go adalah aplikasi pemesanan homestay untuk desa wisata Indonesia. Aplikasi ini menghubungkan wisatawan dengan pemilik homestay lokal, dengan admin desa wisata sebagai verifikator homestay dan bukti pembayaran.
 
-## About Laravel
+Seluruh antarmuka menggunakan Bahasa Indonesia. Kode, komentar, dan penamaan teknis menggunakan Bahasa Inggris.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Fitur Utama
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Publik
+- Halaman beranda dengan homestay unggulan dan paket wisata desa.
+- Katalog homestay dengan pencarian, filter harga, kapasitas, dan fasilitas.
+- Detail homestay: kamar, fasilitas, paket wisata, dan ulasan wisatawan.
+- Pengecekan ketersediaan kamar berdasarkan tanggal check-in/check-out.
+- Halaman masuk dan pendaftaran wisatawan/pemilik homestay.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Wisatawan
+- Membuat pemesanan kamar dengan perhitungan harga otomatis.
+- Memilih paket wisata tambahan saat memesan.
+- Mengunggah bukti pembayaran privat (JPG, PNG, atau PDF maksimal 2 MB).
+- Melihat status pesanan, riwayat pembayaran, dan membatalkan pesanan yang masih menunggu pembayaran.
+- Menulis ulasan setelah menginap selesai.
 
-## Learning Laravel
+### Pemilik Homestay
+- Mengajukan homestay baru untuk diverifikasi admin.
+- Mengelola data homestay, kamar, harga, status kamar, dan paket wisata.
+- Melihat pesanan masuk dan detail tamu.
+- Mengonfirmasi pesanan setelah pembayaran terverifikasi.
+- Menolak pesanan atau menandai pesanan selesai setelah tanggal check-out.
+- Melihat laporan pendapatan berdasarkan rentang tanggal check-in.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Admin Desa Wisata
+- Melihat ringkasan operasional desa wisata.
+- Mencari dan memfilter pengguna, serta mengaktifkan/menonaktifkan akun.
+- Menyetujui atau menolak pengajuan homestay.
+- Memverifikasi atau menolak bukti pembayaran.
+- Mengelola master data fasilitas.
+- Mencetak laporan booking dan laporan pendapatan.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## Teknologi
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- **Laravel 11** (PHP 8.2+)
+- **MySQL / MariaDB**
+- **Blade** + **Tailwind CSS** + **Alpine.js**
+- **Vite** untuk aset frontend
+- **PHPUnit** untuk pengujian
 
-## Laravel Sponsors
+## Alur Bisnis Singkat
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+1. Pemilik mendaftar dan mengajukan homestay. Status awal: `menunggu`.
+2. Admin menyetujui homestay sehingga tampil di katalog publik.
+3. Wisatawan memilih kamar, tanggal, dan paket wisata lalu membuat pesanan.
+4. Sistem memeriksa bentrok jadwal kamar dan menyimpan snapshot harga.
+5. Wisatawan mentransfer dan mengunggah bukti pembayaran. Status pesanan menjadi `menunggu_verifikasi`.
+6. Admin memverifikasi pembayaran. Jika ditolak, pesanan kembali ke `menunggu_pembayaran`.
+7. Pemilik mengonfirmasi pesanan setelah pembayaran terverifikasi.
+8. Setelah tanggal check-out, pemilik menandai pesanan `selesai`.
+9. Wisatawan dapat menulis satu ulasan untuk pesanan yang selesai.
 
-### Premium Partners
+## Persyaratan
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+- PHP 8.2 atau lebih baru dengan ekstensi `pdo_mysql`, `mbstring`, `openssl`, `fileinfo`, dan `zip`.
+- Composer 2.
+- Node.js 18+ dan npm.
+- MySQL 8 / MariaDB 10.4+ (contoh: XAMPP).
 
-## Contributing
+## Instalasi
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```bash
+git clone <url-repositori> homestay-go
+cd homestay-go
 
-## Code of Conduct
+composer install
+npm install
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+copy .env.example .env
+php artisan key:generate
+```
 
-## Security Vulnerabilities
+Sesuaikan konfigurasi database di `.env`:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```dotenv
+APP_NAME="HomeStay Go"
+APP_TIMEZONE=Asia/Jakarta
+APP_URL=http://localhost:8000
 
-## License
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=homestay_go
+DB_USERNAME=root
+DB_PASSWORD=
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Buat database, lalu jalankan migrasi dan seeder:
+
+```bash
+mysql -u root -e "CREATE DATABASE homestay_go CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+php artisan migrate:fresh --seed
+```
+
+Buat symbolic link storage (diperlukan untuk aset publik) dan jalankan aplikasi:
+
+```bash
+php artisan storage:link
+npm run build
+php artisan serve
+```
+
+Buka `http://localhost:8000`.
+
+Untuk mode pengembangan frontend:
+
+```bash
+npm run dev
+```
+
+## Akun Demo
+
+Seeder menyediakan akun berikut:
+
+| Peran | Username | Password |
+| --- | --- | --- |
+| Admin | `admin` | `admin123` |
+| Pemilik Homestay | `pemilik1` | `pemilik123` |
+| Pemilik Homestay | `pemilik2` | `pemilik123` |
+| Wisatawan | `wisatawan1` | `wisatawan123` |
+| Wisatawan | `wisatawan2` | `wisatawan123` |
+| Wisatawan | `wisatawan3` | `wisatawan123` |
+
+Seeder juga membuat contoh homestay, kamar, paket wisata, pesanan dengan berbagai status, pembayaran, dan ulasan agar setiap dashboard dapat langsung dijelajahi.
+
+## Pengujian
+
+Pengujian menggunakan database MySQL terpisah `homestay_go_test` sesuai konfigurasi `phpunit.xml`.
+
+```bash
+mysql -u root -e "CREATE DATABASE homestay_go_test CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+php artisan test
+```
+
+Cakupan pengujian utama:
+
+- Pencegahan bentrok jadwal kamar.
+- Perhitungan dan snapshot harga pesanan.
+- Pembatasan akses berdasarkan peran.
+- Kelayakan dan validasi ulasan.
+- Alur verifikasi pembayaran dan konfirmasi pemilik.
+- Pengelolaan homestay, kamar, paket, dan fasilitas.
+- Laporan booking dan pendapatan.
+
+## Struktur Direktori Penting
+
+```text
+app/
+  Enums/                     Status dan peran dalam bentuk enum
+  Http/Controllers/
+    Admin/                   Fitur admin desa wisata
+    Auth/                    Login dan registrasi
+    Pemilik/                 Fitur pemilik homestay
+    Public/                  Beranda, katalog, detail, ketersediaan
+    Shared/                  Streaming bukti pembayaran privat
+    Wisatawan/               Pemesanan, pembayaran, ulasan
+  Http/Middleware/           Middleware active dan role
+  Http/Requests/             Validasi formulir
+  Models/                    Model domain
+  Policies/                  Otorisasi per model
+  Services/BookingService.php Logika bentrok jadwal dan harga
+database/
+  migrations/                Skema database
+  seeders/                   Data demo
+resources/
+  css/app.css                Tailwind dan design token
+  js/app.js                  Alpine.js dan helper harga
+  views/                     Blade per peran
+routes/web.php               Seluruh rute aplikasi
+tests/Feature/               Pengujian fitur
+```
+
+## Aturan Penting
+
+- Pemesanan yang berstatus `menunggu_pembayaran`, `menunggu_verifikasi`, dan `dikonfirmasi` memblokir kamar pada tanggal yang sama.
+- Tanggal check-out dianggap sebagai hari kamar tersedia kembali (check-in baru boleh di tanggal check-out pesanan sebelumnya).
+- Harga kamar dan paket disimpan sebagai snapshot saat pesanan dibuat, sehingga perubahan harga tidak mengubah pesanan lama.
+- Bukti pembayaran disimpan di disk privat dengan nama acak dan hanya dapat diakses admin serta wisatawan pemilik pesanan.
+- Pemilik hanya dapat mengonfirmasi pesanan jika sudah ada pembayaran terverifikasi.
+- Pemilik hanya dapat menandai selesai setelah tanggal check-out.
+- Kamar dan paket wisata yang sudah memiliki riwayat pesanan tidak dapat dihapus agar data transaksi tetap utuh.
+- Pendapatan dihitung dari pesanan berstatus `dikonfirmasi` dan `selesai`.
+
+## Lisensi
+
+Proyek ini dibuat untuk kebutuhan MVP dan pembelajaran. Silakan sesuaikan lisensi sesuai kebutuhan institusi atau desa wisata Anda.
