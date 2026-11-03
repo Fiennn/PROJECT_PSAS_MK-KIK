@@ -3,7 +3,12 @@
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Pemilik\BookingController as PemilikBookingController;
 use App\Http\Controllers\Pemilik\DashboardController as PemilikDashboardController;
+use App\Http\Controllers\Pemilik\HomestayController as PemilikHomestayController;
+use App\Http\Controllers\Pemilik\KamarController as PemilikKamarController;
+use App\Http\Controllers\Pemilik\PaketWisataController as PemilikPaketWisataController;
+use App\Http\Controllers\Pemilik\PendapatanController as PemilikPendapatanController;
 use App\Http\Controllers\Public\CatalogController;
 use App\Http\Controllers\Public\HomestayController;
 use App\Http\Controllers\Public\LandingController;
@@ -57,6 +62,32 @@ Route::middleware(['auth', 'active', 'role:pemilik'])
     ->name('pemilik.')
     ->group(function () {
         Route::get('/dashboard', [PemilikDashboardController::class, 'index'])->name('dashboard');
+
+        Route::get('/homestay', [PemilikHomestayController::class, 'index'])->name('homestay.index');
+        Route::get('/homestay/create', [PemilikHomestayController::class, 'create'])->name('homestay.create');
+        Route::post('/homestay', [PemilikHomestayController::class, 'store'])->name('homestay.store');
+        Route::get('/homestay/{homestay}/edit', [PemilikHomestayController::class, 'edit'])->name('homestay.edit');
+        Route::patch('/homestay/{homestay}', [PemilikHomestayController::class, 'update'])->name('homestay.update');
+
+        Route::get('/homestay/{homestay}/kamar', [PemilikKamarController::class, 'index'])->name('homestay.kamar.index');
+        Route::post('/homestay/{homestay}/kamar', [PemilikKamarController::class, 'store'])->name('homestay.kamar.store');
+        Route::get('/kamar/{kamar}/edit', [PemilikKamarController::class, 'edit'])->name('kamar.edit');
+        Route::patch('/kamar/{kamar}', [PemilikKamarController::class, 'update'])->name('kamar.update');
+        Route::delete('/kamar/{kamar}', [PemilikKamarController::class, 'destroy'])->name('kamar.destroy');
+
+        Route::get('/homestay/{homestay}/paket', [PemilikPaketWisataController::class, 'index'])->name('homestay.paket.index');
+        Route::post('/homestay/{homestay}/paket', [PemilikPaketWisataController::class, 'store'])->name('homestay.paket.store');
+        Route::get('/paket/{paket}/edit', [PemilikPaketWisataController::class, 'edit'])->name('paket.edit');
+        Route::patch('/paket/{paket}', [PemilikPaketWisataController::class, 'update'])->name('paket.update');
+        Route::delete('/paket/{paket}', [PemilikPaketWisataController::class, 'destroy'])->name('paket.destroy');
+
+        Route::get('/booking', [PemilikBookingController::class, 'index'])->name('booking.index');
+        Route::get('/booking/{booking}', [PemilikBookingController::class, 'show'])->name('booking.show');
+        Route::patch('/booking/{booking}/konfirmasi', [PemilikBookingController::class, 'confirm'])->name('booking.confirm');
+        Route::patch('/booking/{booking}/tolak', [PemilikBookingController::class, 'reject'])->name('booking.reject');
+        Route::patch('/booking/{booking}/selesai', [PemilikBookingController::class, 'complete'])->name('booking.complete');
+
+        Route::get('/pendapatan', [PemilikPendapatanController::class, 'index'])->name('pendapatan');
     });
 
 Route::middleware(['auth', 'active', 'role:admin'])
