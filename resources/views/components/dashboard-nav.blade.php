@@ -26,12 +26,14 @@
 <nav class="no-print -mx-4 overflow-x-auto px-4 pb-1 sm:mx-0 sm:px-0" aria-label="Navigasi dashboard">
     <div class="flex min-w-max gap-2 rounded-3xl border border-sand-200 bg-white p-2 shadow-soft">
         @foreach ($links as $link)
-            <a
-                href="{{ route($link['route']) }}"
-                class="focus-ring whitespace-nowrap rounded-2xl px-4 py-2.5 text-sm font-semibold transition {{ request()->routeIs($link['active']) ? 'bg-forest-700 text-white' : 'text-forest-900 hover:bg-forest-50' }}"
-            >
-                {{ $link['label'] }}
-            </a>
+            @if (Route::has($link['route']))
+                <a
+                    href="{{ route($link['route']) }}"
+                    class="focus-ring whitespace-nowrap rounded-2xl px-4 py-2.5 text-sm font-semibold transition {{ request()->routeIs($link['active']) ? 'bg-forest-700 text-white' : 'text-forest-900 hover:bg-forest-50' }}"
+                >
+                    {{ $link['label'] }}
+                </a>
+            @endif
         @endforeach
     </div>
 </nav>

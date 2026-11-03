@@ -42,6 +42,22 @@ class Homestay extends Model
         return $query->where('status_verifikasi', StatusVerifikasi::Disetujui->value);
     }
 
+    /**
+     * Add average rating and review count from reviews on this homestay's bookings.
+     */
+    public function scopeWithRatingStats(Builder $query): Builder
+    {
+        $base = fn () => Ulasan::query()
+            ->join('booking', 'booking.id_booking', '=', 'ulasan.id_booking')
+            ->join('kamar', 'kamar.id_kamar', '=', 'booking.id_kamar')
+            ->whereColumn('kamar.id_homestay', 'homestay.id_homestay');
+
+        return $query->addSelect([
+            'ulasan_avg_rating' => $base()->selectRaw('round(avg(ulasan.rating), 1)'),
+            'ulasan_count' => $base()->selectRaw('count(ulasan.id_ulasan)'),
+        ]);
+    }
+
     public function pemilik()
     {
         return $this->belongsTo(PemilikHomestay::class, 'id_pemilik', 'id_pemilik');

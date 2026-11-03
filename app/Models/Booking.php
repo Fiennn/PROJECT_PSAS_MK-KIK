@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\StatusBooking;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -50,6 +51,13 @@ class Booking extends Model
         return $query->whereIn('status', StatusBooking::activeValues());
     }
 
+    public function scopeOverlapping(Builder $query, string $checkin, string $checkout): Builder
+    {
+        return $query
+            ->where('tgl_checkin', '<', $checkout)
+            ->where('tgl_checkout', '>', $checkin);
+    }
+
     public function wisatawan()
     {
         return $this->belongsTo(Wisatawan::class, 'id_wisatawan', 'id_wisatawan');
@@ -85,13 +93,18 @@ class Booking extends Model
         return $this->hasOne(Ulasan::class, 'id_booking', 'id_booking');
     }
 
-    public function jumlahMalam(): int
+    public function hitungJumlahMalam(): int
     {
         if (! $this->tgl_checkin || ! $this->tgl_checkout) {
             return 0;
         }
 
-        return $this->tgl_checkin->diffInDays($this->tgl_checkout);
+        return (int) $this->tgl_checkin->diffInDays($this->tgl_checkout);
+    }
+
+    protected function jumlahMalam(): Attribute
+    {
+        return Attribute::get(fn () => $this->hitungJumlahMalam());
     }
 
     public function pembayaranTerverifikasi(): bool

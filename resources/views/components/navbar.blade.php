@@ -16,7 +16,9 @@
 
         <nav class="hidden items-center gap-1 lg:flex" aria-label="Navigasi utama">
             <a href="{{ route('home') }}" class="nav-link {{ request()->routeIs('home') ? 'nav-link-active' : '' }}">Beranda</a>
-            <a href="{{ route('homestay.index') }}" class="nav-link {{ request()->routeIs('homestay.*') ? 'nav-link-active' : '' }}">Jelajahi Homestay</a>
+            @if (Route::has('homestay.index'))
+                <a href="{{ route('homestay.index') }}" class="nav-link {{ request()->routeIs('homestay.*') ? 'nav-link-active' : '' }}">Jelajahi Homestay</a>
+            @endif
             @auth
                 @if ($dashboardRoute)
                     <a href="{{ route($dashboardRoute) }}" class="nav-link {{ request()->routeIs('*.dashboard') ? 'nav-link-active' : '' }}">Dashboard</a>
@@ -60,7 +62,9 @@
     <div id="mobile-menu" x-show="open" x-cloak class="border-t border-sand-200 bg-sand-50 px-4 pb-6 pt-4 lg:hidden">
         <nav class="flex flex-col gap-1" aria-label="Navigasi seluler">
             <a href="{{ route('home') }}" class="nav-link">Beranda</a>
-            <a href="{{ route('homestay.index') }}" class="nav-link">Jelajahi Homestay</a>
+            @if (Route::has('homestay.index'))
+                <a href="{{ route('homestay.index') }}" class="nav-link">Jelajahi Homestay</a>
+            @endif
             @auth
                 @if ($dashboardRoute)
                     <a href="{{ route($dashboardRoute) }}" class="nav-link">Dashboard</a>

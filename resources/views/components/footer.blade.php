@@ -10,7 +10,9 @@
         <div>
             <h2 class="text-sm font-bold uppercase tracking-[0.18em] text-sand-300">Jelajahi</h2>
             <ul class="mt-4 space-y-2 text-sm text-sand-100/90">
-                <li><a href="{{ route('homestay.index') }}" class="hover:text-white">Katalog homestay</a></li>
+                @if (Route::has('homestay.index'))
+                    <li><a href="{{ route('homestay.index') }}" class="hover:text-white">Katalog homestay</a></li>
+                @endif
                 <li><a href="{{ route('register') }}" class="hover:text-white">Menjadi pemilik homestay</a></li>
                 <li><a href="{{ route('login') }}" class="hover:text-white">Masuk ke akun</a></li>
             </ul>
