@@ -10,6 +10,13 @@ export default {
     theme: {
         extend: {
             colors: {
+                brand: {
+                    forest: '#13391b',
+                    forestLight: '#1b4d24',
+                    forestDark: '#0e2c14',
+                    orange: '#ea580c',
+                    orangeHover: '#c2410c',
+                },
                 forest: {
                     50: '#f3f7f2',
                     100: '#e3ede0',
@@ -60,6 +67,20 @@ export default {
             },
             borderRadius: {
                 '4xl': '2rem',
+            },
+            keyframes: {
+                ticker: {
+                    '0%': { transform: 'translateX(0%)' },
+                    '100%': { transform: 'translateX(-50%)' },
+                },
+                marquee: {
+                    '0%': { transform: 'translateX(0%)' },
+                    '100%': { transform: 'translateX(-50%)' },
+                },
+            },
+            animation: {
+                ticker: 'ticker 30s linear infinite',
+                marquee: 'marquee 25s linear infinite',
             },
             backgroundImage: {
                 'grain':

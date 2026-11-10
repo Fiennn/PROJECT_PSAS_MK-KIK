@@ -10,11 +10,13 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Google Material Symbols Outlined -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('head')
 </head>
-<body class="min-h-screen bg-sand-50 bg-grain font-sans">
+<body class="min-h-screen bg-[#faf9f5] text-stone-900 font-sans antialiased selection:bg-[#13391b] selection:text-white">
     <a href="#main-content" class="sr-only z-50 rounded-xl bg-forest-700 px-4 py-2 text-white focus:not-sr-only focus:absolute focus:left-4 focus:top-4">
         Lewati ke konten utama
     </a>

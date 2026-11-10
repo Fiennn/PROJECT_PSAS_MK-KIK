@@ -15,6 +15,7 @@ class CatalogController extends Controller
     {
         $filters = $request->validate([
             'q' => ['nullable', 'string', 'max:100'],
+            'kota' => ['nullable', 'string', 'max:100'],
             'harga_max' => ['nullable', 'numeric', 'min:0'],
             'kapasitas' => ['nullable', 'integer', 'min:1', 'max:20'],
             'fasilitas' => ['nullable', 'array'],
@@ -39,7 +40,15 @@ class CatalogController extends Controller
             ->withRatingStats();
 
         if (! empty($filters['q'])) {
-            $query->where('nama_homestay', 'like', '%'.$filters['q'].'%');
+            $searchTerm = $filters['q'];
+            $query->where(function ($sub) use ($searchTerm) {
+                $sub->where('nama_homestay', 'like', '%'.$searchTerm.'%')
+                    ->orWhere('alamat', 'like', '%'.$searchTerm.'%');
+            });
+        }
+
+        if (! empty($filters['kota'])) {
+            $query->where('alamat', 'like', '%'.$filters['kota'].'%');
         }
 
         if (isset($filters['harga_max'])) {
