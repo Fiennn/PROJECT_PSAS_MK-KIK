@@ -6,6 +6,7 @@ use App\Enums\StatusKamar;
 use App\Http\Controllers\Controller;
 use App\Models\Homestay;
 use App\Models\Kamar;
+use App\Models\PaketWisata;
 use App\Models\Ulasan;
 use Illuminate\View\View;
 
@@ -26,7 +27,12 @@ class LandingController extends Controller
             ->withRatingStats()
             ->orderByDesc('ulasan_avg_rating')
             ->orderBy('nama_homestay')
-            ->limit(3)
+            ->limit(8)
+            ->get();
+
+        $paketWisata = PaketWisata::query()
+            ->with('homestay')
+            ->limit(4)
             ->get();
 
         $stats = [
@@ -46,6 +52,6 @@ class LandingController extends Controller
             ->limit(3)
             ->get();
 
-        return view('public.landing', compact('featured', 'stats', 'testimonials'));
+        return view('public.landing', compact('featured', 'paketWisata', 'stats', 'testimonials'));
     }
 }

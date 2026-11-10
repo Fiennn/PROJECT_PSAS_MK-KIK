@@ -95,6 +95,21 @@ class HomestaySeeder extends Seeder
                 'paket' => [],
             ],
             [
+                'pemilik' => $pemilik1,
+                'nama' => 'Homestay Baturraden Asri',
+                'deskripsi' => 'Homestay kayu alami di lereng Gunung Slamet dengan pemandangan sawah terasering dan udara pegunungan yang sejuk. Sangat dekat dengan Lokawisata Baturraden.',
+                'alamat' => 'Desa Karangsalam, Baturraden, Banyumas, Jawa Tengah',
+                'status' => StatusVerifikasi::Disetujui,
+                'fasilitas' => ['WiFi Gratis', 'Parkir Kendaraan', 'Sarapan Pagi', 'Air Panas', 'Pemandangan Sawah'],
+                'kamar' => [
+                    ['nama' => 'Kamar Slamet', 'kapasitas' => 2, 'harga' => 250000, 'status' => 'tersedia'],
+                    ['nama' => 'Kamar Curug', 'kapasitas' => 4, 'harga' => 380000, 'status' => 'tersedia'],
+                ],
+                'paket' => [
+                    ['nama' => 'Tur Curug & Hutan Pinus', 'deskripsi' => 'Jelajah curug alami dan tracking hutan pinus dipandu pemuda karang taruna.', 'harga' => 60000, 'durasi' => '2 jam'],
+                ],
+            ],
+            [
                 'pemilik' => $pemilik2,
                 'nama' => 'Pondok Kopi Priangan',
                 'deskripsi' => 'Pondok di tengah kebun kopi Pangalengan. Pengajuan verifikasi ditolak karena data alamat belum lengkap.',

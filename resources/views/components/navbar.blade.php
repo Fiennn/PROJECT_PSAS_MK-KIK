@@ -8,79 +8,129 @@
     };
 @endphp
 
-<header x-data="{ open: false }" class="sticky top-0 z-40 border-b border-sand-200/80 bg-sand-50/90 backdrop-blur">
-    <div class="mx-auto flex h-20 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
-        <a href="{{ route('home') }}" class="focus-ring rounded-2xl">
+<!-- TOP NAVBAR (BACKGROUND PUTIH/KREM HANGAT, LOGO HIJAU & ORANGE, PILL BUTTON HIJAU BOTOL) -->
+<header x-data="{ open: false }" class="sticky top-0 z-50 bg-[#faf9f5]/95 backdrop-blur-md border-b border-stone-200/80 shadow-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+        
+        <!-- Logo Brand -->
+        <a href="{{ route('home') }}" class="flex items-center gap-3 group focus:outline-none">
             <x-logo />
         </a>
 
-        <nav class="hidden items-center gap-1 lg:flex" aria-label="Navigasi utama">
-            <a href="{{ route('home') }}" class="nav-link {{ request()->routeIs('home') ? 'nav-link-active' : '' }}">Beranda</a>
+        <!-- Menu Links & Pill Action Desktop -->
+        <nav class="hidden md:flex items-center gap-2 text-sm font-semibold text-stone-700" aria-label="Navigasi Utama">
+            <a href="{{ route('home') }}" class="px-4 py-2 rounded-full transition-colors {{ request()->routeIs('home') ? 'text-stone-900 font-bold hover:text-[#13391b]' : 'hover:text-[#13391b]' }}">
+                Beranda
+            </a>
+
             @if (Route::has('homestay.index'))
-                <a href="{{ route('homestay.index') }}" class="nav-link {{ request()->routeIs('homestay.*') ? 'nav-link-active' : '' }}">Jelajahi Homestay</a>
+                <a href="{{ route('homestay.index') }}" class="bg-[#13391b] hover:bg-[#0e2c14] text-white px-5 py-2.5 rounded-full shadow-xs transition-all flex items-center gap-1.5 hover:shadow-sm">
+                    <span class="material-symbols-outlined text-base">travel_explore</span>
+                    <span>Jelajahi Homestay</span>
+                </a>
             @endif
+
+            <a href="{{ request()->routeIs('home') ? '#paket' : route('home') . '#paket' }}" class="px-4 py-2 rounded-full hover:text-[#13391b] transition-colors">
+                Paket Wisata
+            </a>
+
+            <a href="{{ request()->routeIs('home') ? '#keunggulan' : route('home') . '#keunggulan' }}" class="px-4 py-2 rounded-full hover:text-[#13391b] transition-colors">
+                Keunggulan
+            </a>
+
             @auth
                 @if ($dashboardRoute)
-                    <a href="{{ route($dashboardRoute) }}" class="nav-link {{ request()->routeIs('*.dashboard') ? 'nav-link-active' : '' }}">Dashboard</a>
+                    <a href="{{ route($dashboardRoute) }}" class="px-4 py-2 rounded-full text-emerald-800 font-bold hover:text-[#13391b] transition-colors flex items-center gap-1">
+                        <span class="material-symbols-outlined text-base">dashboard</span>
+                        <span>Dashboard</span>
+                    </a>
                 @endif
             @endauth
         </nav>
 
-        <div class="hidden items-center gap-3 lg:flex">
+        <!-- Auth Buttons Desktop -->
+        <div class="hidden md:flex items-center gap-3">
             @guest
-                <a href="{{ route('login') }}" class="nav-link">Masuk</a>
-                <x-button :href="route('register')" size="sm">Daftar Sekarang</x-button>
+                <a href="{{ route('login') }}" class="text-sm font-semibold text-stone-700 hover:text-[#13391b] px-4 py-2 rounded-full transition-colors">
+                    Masuk
+                </a>
+                <a href="{{ route('register') }}" class="bg-[#13391b] hover:bg-[#0e2c14] text-white text-sm font-bold px-5 py-2.5 rounded-full shadow-xs transition-all hover:shadow-sm">
+                    Daftar Sekarang
+                </a>
             @else
-                <div class="text-right">
-                    <p class="text-sm font-semibold text-forest-900">{{ $user->displayName() }}</p>
-                    <p class="text-xs capitalize text-stone-500">{{ $user->role->value }}</p>
+                <div class="flex items-center gap-3 bg-white px-3.5 py-1.5 rounded-full border border-stone-200 shadow-xs">
+                    <div class="leading-tight text-right">
+                        <span class="block text-xs font-bold text-stone-900">{{ $user->displayName() }}</span>
+                        <span class="block text-[10px] font-semibold uppercase tracking-wider text-emerald-700">{{ $user->role->value }}</span>
+                    </div>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="w-8 h-8 rounded-full bg-stone-100 hover:bg-red-50 text-stone-600 hover:text-red-600 flex items-center justify-center transition-colors cursor-pointer" title="Keluar">
+                            <span class="material-symbols-outlined text-base">logout</span>
+                        </button>
+                    </form>
                 </div>
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <x-button type="submit" variant="ghost" size="sm">Keluar</x-button>
-                </form>
             @endguest
         </div>
 
+        <!-- Mobile Hamburger Button -->
         <button
             type="button"
-            class="focus-ring inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-sand-300 bg-white text-forest-900 lg:hidden"
+            class="md:hidden inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-stone-300 bg-white text-stone-900 shadow-xs transition-colors hover:bg-stone-50 cursor-pointer"
             @click="open = !open"
             :aria-expanded="open"
-            aria-controls="mobile-menu"
-            aria-label="Buka menu"
+            aria-label="Buka Menu"
         >
-            <svg x-show="!open" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-                <path stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16" />
-            </svg>
-            <svg x-show="open" x-cloak class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-                <path stroke-linecap="round" d="M6 6l12 12M18 6L6 18" />
-            </svg>
+            <span class="material-symbols-outlined text-2xl" x-text="open ? 'close' : 'menu'">menu</span>
         </button>
     </div>
 
-    <div id="mobile-menu" x-show="open" x-cloak class="border-t border-sand-200 bg-sand-50 px-4 pb-6 pt-4 lg:hidden">
-        <nav class="flex flex-col gap-1" aria-label="Navigasi seluler">
-            <a href="{{ route('home') }}" class="nav-link">Beranda</a>
+    <!-- Mobile Drawer Menu -->
+    <div id="mobile-menu" x-show="open" x-cloak class="border-t border-stone-200 bg-[#faf9f5] px-5 pb-6 pt-4 md:hidden shadow-lg">
+        <nav class="flex flex-col gap-2">
+            <a href="{{ route('home') }}" class="px-3 py-2 rounded-xl text-sm font-bold {{ request()->routeIs('home') ? 'bg-emerald-50 text-[#13391b]' : 'text-stone-700' }}">
+                Beranda
+            </a>
             @if (Route::has('homestay.index'))
-                <a href="{{ route('homestay.index') }}" class="nav-link">Jelajahi Homestay</a>
+                <a href="{{ route('homestay.index') }}" class="bg-[#13391b] text-white px-4 py-2.5 rounded-xl text-sm font-bold shadow-xs flex items-center gap-2">
+                    <span class="material-symbols-outlined text-base">travel_explore</span>
+                    <span>Jelajahi Homestay</span>
+                </a>
             @endif
+            <a href="{{ request()->routeIs('home') ? '#paket' : route('home') . '#paket' }}" @click="open = false" class="px-3 py-2 rounded-xl text-sm font-semibold text-stone-700 hover:bg-stone-100">
+                Paket Wisata
+            </a>
+            <a href="{{ request()->routeIs('home') ? '#keunggulan' : route('home') . '#keunggulan' }}" @click="open = false" class="px-3 py-2 rounded-xl text-sm font-semibold text-stone-700 hover:bg-stone-100">
+                Keunggulan
+            </a>
+
             @auth
                 @if ($dashboardRoute)
-                    <a href="{{ route($dashboardRoute) }}" class="nav-link">Dashboard</a>
+                    <a href="{{ route($dashboardRoute) }}" class="px-3 py-2 rounded-xl text-sm font-bold text-emerald-800 bg-emerald-50 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-base">dashboard</span>
+                        <span>Dashboard ({{ ucfirst($user->role->value) }})</span>
+                    </a>
                 @endif
-                <div class="mt-3 border-t border-sand-200 pt-4">
-                    <p class="px-4 text-sm font-semibold text-forest-900">{{ $user->displayName() }}</p>
-                    <p class="px-4 text-xs capitalize text-stone-500">{{ $user->role->value }}</p>
-                    <form method="POST" action="{{ route('logout') }}" class="mt-3 px-4">
+                <div class="mt-4 pt-4 border-t border-stone-200 flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-bold text-stone-900">{{ $user->displayName() }}</p>
+                        <p class="text-xs uppercase font-semibold text-emerald-700">{{ $user->role->value }}</p>
+                    </div>
+                    <form method="POST" action="{{ route('logout') }}">
                         @csrf
-                        <x-button type="submit" variant="secondary" size="sm" class="w-full">Keluar</x-button>
+                        <button type="submit" class="bg-red-50 text-red-600 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-red-100 cursor-pointer">
+                            Keluar
+                        </button>
                     </form>
                 </div>
             @else
-                <div class="mt-4 grid grid-cols-2 gap-3 border-t border-sand-200 pt-4">
-                    <x-button :href="route('login')" variant="secondary">Masuk</x-button>
-                    <x-button :href="route('register')">Daftar</x-button>
+                <div class="mt-4 pt-4 border-t border-stone-200 grid grid-cols-2 gap-3">
+                    <a href="{{ route('login') }}" class="text-center py-2.5 rounded-xl border border-stone-300 bg-white text-stone-800 text-sm font-bold">
+                        Masuk
+                    </a>
+                    <a href="{{ route('register') }}" class="text-center py-2.5 rounded-xl bg-[#13391b] text-white text-sm font-bold shadow-xs">
+                        Daftar
+                    </a>
                 </div>
             @endguest
         </nav>

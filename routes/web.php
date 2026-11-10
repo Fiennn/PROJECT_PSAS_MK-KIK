@@ -35,8 +35,14 @@ Route::get('/homestay/{homestay}', [HomestayController::class, 'show'])->name('h
 Route::middleware('guest')->group(function () {
     Route::get('/login', [LoginController::class, 'create'])->name('login');
     Route::post('/login', [LoginController::class, 'store']);
+    Route::post('/login/whatsapp', [LoginController::class, 'loginViaWhatsApp'])->name('login.whatsapp');
+    Route::get('/login/social/{provider}', [LoginController::class, 'loginViaSocial'])->name('login.social');
+
     Route::get('/register', [RegisterController::class, 'create'])->name('register');
     Route::post('/register', [RegisterController::class, 'store']);
+    Route::get('/register/verify-otp', [RegisterController::class, 'showOtpForm'])->name('register.otp');
+    Route::post('/register/verify-otp', [RegisterController::class, 'verifyOtp'])->name('register.verify-otp');
+    Route::post('/register/resend-otp', [RegisterController::class, 'resendOtp'])->name('register.resend-otp');
 });
 
 Route::post('/logout', [LoginController::class, 'destroy'])->middleware('auth')->name('logout');
