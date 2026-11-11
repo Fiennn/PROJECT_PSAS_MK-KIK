@@ -1392,12 +1392,12 @@
     <!-- Background Image with dynamic scroll zoom & fade-in reveal -->
     <div class="absolute inset-0 z-0 overflow-hidden">
       <img id="finale-bg-img" 
-           src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=2400&q=90" 
+           src="https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?auto=format&fit=crop&w=2400&q=90" 
            alt="Panorama Pagi Desa Wisata Indonesia" 
-           class="w-full h-full object-cover transition-all duration-1000 ease-out will-change-transform will-change-opacity opacity-20 scale-110 filter brightness-90" />
-      <!-- Atmospheric dark gradient scrim overlays -->
-      <div class="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-950/60 to-stone-950/80"></div>
-      <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(19,57,27,0.5)_0%,rgba(0,0,0,0.85)_100%)]"></div>
+           class="w-full h-full object-cover transition-all duration-1000 ease-out will-change-transform will-change-opacity opacity-40 scale-110 filter brightness-105 contrast-110" />
+      <!-- Atmospheric cinematic overlays: soft top & bottom dark fade with a crystal clear center viewport -->
+      <div class="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-950/30 to-stone-950/70"></div>
+      <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(19,57,27,0.25)_0%,rgba(12,18,14,0.65)_100%)]"></div>
     </div>
 
     <!-- Center Content with reveal animation -->
@@ -1624,8 +1624,8 @@
       const finaleObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
-            finaleBgImg.classList.remove('opacity-20', 'scale-110');
-            finaleBgImg.classList.add('opacity-75', 'scale-100');
+            finaleBgImg.classList.remove('opacity-40', 'scale-110');
+            finaleBgImg.classList.add('opacity-90', 'scale-100');
 
             finaleContent.classList.remove('translate-y-8', 'opacity-0');
             finaleContent.classList.add('translate-y-0', 'opacity-100');
