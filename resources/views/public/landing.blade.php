@@ -161,38 +161,38 @@
     </div>
   </section>
 
-  <!-- TEXT TICKER (DENGAN ICON VECTOR RESMI MATERIAL SYMBOLS WARNA EMERALD DESA) -->
+  <!-- TEXT TICKER (DENGAN ICON VECTOR RESMI MATERIAL SYMBOLS WARNA HIJAU LOGO #1b4d24) -->
   <div class="relative overflow-hidden bg-[#ea580c] text-white border-y border-orange-700/80 py-3.5 text-xs font-bold tracking-wider uppercase select-none shadow-inner">
     <div class="flex w-[200%] animate-marquee whitespace-nowrap">
       
       <!-- Sequence 1 -->
       <div class="flex items-center gap-8 shrink-0 px-6">
         <span class="inline-flex items-center gap-2">
-          <span class="material-symbols-outlined text-emerald-400 text-[18px]">verified</span>
+          <span class="material-symbols-outlined text-[#1b4d24] text-[18px]">verified</span>
           <span>100% Bebas Double Booking</span>
         </span>
         <span class="inline-flex items-center gap-2">
-          <span class="material-symbols-outlined text-emerald-400 text-[18px]">star</span>
+          <span class="material-symbols-outlined text-[#1b4d24] text-[18px]">star</span>
           <span>Terverifikasi Pokdarwis</span>
         </span>
         <span class="inline-flex items-center gap-2">
-          <span class="material-symbols-outlined text-emerald-400 text-[18px]">handshake</span>
+          <span class="material-symbols-outlined text-[#1b4d24] text-[18px]">handshake</span>
           <span>Pemberdayaan Ekonomi Warga Lokal</span>
         </span>
         <span class="inline-flex items-center gap-2">
-          <span class="material-symbols-outlined text-emerald-400 text-[18px]">eco</span>
+          <span class="material-symbols-outlined text-[#1b4d24] text-[18px]">eco</span>
           <span>Eco-Hospitality Nusantara</span>
         </span>
         <span class="inline-flex items-center gap-2">
-          <span class="material-symbols-outlined text-emerald-400 text-[18px]">qr_code_2</span>
+          <span class="material-symbols-outlined text-[#1b4d24] text-[18px]">qr_code_2</span>
           <span>E-Tiket &amp; QR Check-in Instan</span>
         </span>
         <span class="inline-flex items-center gap-2">
-          <span class="material-symbols-outlined text-emerald-400 text-[18px]">location_on</span>
+          <span class="material-symbols-outlined text-[#1b4d24] text-[18px]">location_on</span>
           <span>Desa Wisata Penglipuran Bali</span>
         </span>
         <span class="inline-flex items-center gap-2">
-          <span class="material-symbols-outlined text-emerald-400 text-[18px]">reviews</span>
+          <span class="material-symbols-outlined text-[#1b4d24] text-[18px]">reviews</span>
           <span>Ratusan Ulasan Wisatawan Asli</span>
         </span>
       </div>
@@ -200,31 +200,31 @@
       <!-- Sequence 2 -->
       <div class="flex items-center gap-8 shrink-0 px-6" aria-hidden="true">
         <span class="inline-flex items-center gap-2">
-          <span class="material-symbols-outlined text-emerald-400 text-[18px]">verified</span>
+          <span class="material-symbols-outlined text-[#1b4d24] text-[18px]">verified</span>
           <span>100% Bebas Double Booking</span>
         </span>
         <span class="inline-flex items-center gap-2">
-          <span class="material-symbols-outlined text-emerald-400 text-[18px]">star</span>
+          <span class="material-symbols-outlined text-[#1b4d24] text-[18px]">star</span>
           <span>Terverifikasi Pokdarwis</span>
         </span>
         <span class="inline-flex items-center gap-2">
-          <span class="material-symbols-outlined text-emerald-400 text-[18px]">handshake</span>
+          <span class="material-symbols-outlined text-[#1b4d24] text-[18px]">handshake</span>
           <span>Pemberdayaan Ekonomi Warga Lokal</span>
         </span>
         <span class="inline-flex items-center gap-2">
-          <span class="material-symbols-outlined text-emerald-400 text-[18px]">eco</span>
+          <span class="material-symbols-outlined text-[#1b4d24] text-[18px]">eco</span>
           <span>Eco-Hospitality Nusantara</span>
         </span>
         <span class="inline-flex items-center gap-2">
-          <span class="material-symbols-outlined text-emerald-400 text-[18px]">qr_code_2</span>
+          <span class="material-symbols-outlined text-[#1b4d24] text-[18px]">qr_code_2</span>
           <span>E-Tiket &amp; QR Check-in Instan</span>
         </span>
         <span class="inline-flex items-center gap-2">
-          <span class="material-symbols-outlined text-emerald-400 text-[18px]">location_on</span>
+          <span class="material-symbols-outlined text-[#1b4d24] text-[18px]">location_on</span>
           <span>Desa Wisata Penglipuran Bali</span>
         </span>
         <span class="inline-flex items-center gap-2">
-          <span class="material-symbols-outlined text-emerald-400 text-[18px]">reviews</span>
+          <span class="material-symbols-outlined text-[#1b4d24] text-[18px]">reviews</span>
           <span>Ratusan Ulasan Wisatawan Asli</span>
         </span>
       </div>
