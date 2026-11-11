@@ -31,4 +31,10 @@ class HomestayPolicy
     {
         return $this->update($user, $homestay);
     }
+
+    public function delete(User $user, Homestay $homestay): bool
+    {
+        return $this->update($user, $homestay)
+            && ! $homestay->booking()->exists();
+    }
 }

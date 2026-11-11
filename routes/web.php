@@ -79,6 +79,7 @@ Route::middleware(['auth', 'active', 'role:pemilik'])
         Route::post('/homestay', [PemilikHomestayController::class, 'store'])->name('homestay.store');
         Route::get('/homestay/{homestay}/edit', [PemilikHomestayController::class, 'edit'])->name('homestay.edit');
         Route::patch('/homestay/{homestay}', [PemilikHomestayController::class, 'update'])->name('homestay.update');
+        Route::delete('/homestay/{homestay}', [PemilikHomestayController::class, 'destroy'])->name('homestay.destroy');
 
         Route::get('/homestay/{homestay}/kamar', [PemilikKamarController::class, 'index'])->name('homestay.kamar.index');
         Route::post('/homestay/{homestay}/kamar', [PemilikKamarController::class, 'store'])->name('homestay.kamar.store');

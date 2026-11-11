@@ -15,23 +15,51 @@ class BookingController extends Controller
     public function index(Request $request): View
     {
         $pemilik = $request->user()->pemilikHomestay()->firstOrFail();
-        $homestayIds = Homestay::where('id_pemilik', $pemilik->id_pemilik)->pluck('id_homestay');
+        $ownerHomestays = Homestay::where('id_pemilik', $pemilik->id_pemilik)->orderBy('nama_homestay')->get();
+        $homestayIds = $ownerHomestays->pluck('id_homestay');
 
         $status = $request->query('status');
+        $q = $request->query('q');
+        $homestayFilter = $request->query('homestay');
         $allowedStatuses = array_column(StatusBooking::cases(), 'value');
 
         $bookings = Booking::query()
             ->whereHas('kamar', fn ($query) => $query->whereIn('id_homestay', $homestayIds))
             ->when(
                 $status && in_array($status, $allowedStatuses, true),
-                fn ($query) => $query->where('status', $status)
+                fn ($query) => $query->where('booking.status', $status)
             )
-            ->with(['kamar.homestay', 'wisatawan', 'pembayaran', 'paket'])
+            ->when($homestayFilter, function ($query, $hId) {
+                $query->whereHas('kamar', fn ($k) => $k->where('id_homestay', $hId));
+            })
+            ->when($q, function ($query, $q) {
+                $query->where(function ($sub) use ($q) {
+                    $sub->where('booking.id_booking', 'like', "%{$q}%")
+                        ->orWhereHas('wisatawan', fn ($w) => $w->where('nama_wisatawan', 'like', "%{$q}%")->orWhere('no_hp', 'like', "%{$q}%"))
+                        ->orWhereHas('kamar', fn ($k) => $k->where('nama_kamar', 'like', "%{$q}%"));
+                });
+            })
+            ->with(['kamar.homestay', 'wisatawan.user', 'pembayaran', 'paket'])
             ->orderByDesc('id_booking')
             ->paginate(10)
             ->withQueryString();
 
-        return view('pemilik.booking.index', compact('bookings', 'status'));
+        $allBookings = Booking::whereHas('kamar', fn ($query) => $query->whereIn('id_homestay', $homestayIds))->get();
+        $counts = [
+            'total' => $allBookings->count(),
+            'perlu_konfirmasi' => $allBookings->where('status', StatusBooking::MenungguVerifikasi)->count(),
+            'dikonfirmasi' => $allBookings->where('status', StatusBooking::Dikonfirmasi)->count(),
+            'selesai' => $allBookings->where('status', StatusBooking::Selesai)->count(),
+        ];
+
+        return view('pemilik.booking.index', compact(
+            'bookings',
+            'status',
+            'q',
+            'homestayFilter',
+            'counts',
+            'ownerHomestays'
+        ));
     }
 
     public function show(Booking $booking): View
@@ -40,7 +68,7 @@ class BookingController extends Controller
 
         $booking->load([
             'kamar.homestay.pemilik',
-            'wisatawan',
+            'wisatawan.user',
             'paket',
             'pembayaran' => fn ($query) => $query->orderByDesc('id_pembayaran'),
             'ulasan',
@@ -57,7 +85,7 @@ class BookingController extends Controller
 
         return redirect()
             ->route('pemilik.booking.show', $booking)
-            ->with('success', 'Pesanan dikonfirmasi. Tamu akan datang sesuai tanggal check-in.');
+            ->with('success', 'Pesanan #'.$booking->id_booking.' berhasil dikonfirmasi. Kamar siap menyambut tamu pada tanggal check-in.');
     }
 
     public function reject(Booking $booking): RedirectResponse
@@ -68,7 +96,7 @@ class BookingController extends Controller
 
         return redirect()
             ->route('pemilik.booking.show', $booking)
-            ->with('success', 'Pesanan ditolak. Kamar kembali tersedia untuk tamu lain.');
+            ->with('success', 'Pesanan #'.$booking->id_booking.' ditolak. Kamar kembali tersedia untuk wisatawan lain.');
     }
 
     public function complete(Booking $booking): RedirectResponse
@@ -79,6 +107,6 @@ class BookingController extends Controller
 
         return redirect()
             ->route('pemilik.booking.show', $booking)
-            ->with('success', 'Pesanan ditandai selesai. Tamu sekarang dapat menulis ulasan.');
+            ->with('success', 'Pesanan #'.$booking->id_booking.' ditandai selesai. Terima kasih telah menyambut tamu dengan keramahan desa.');
     }
 }

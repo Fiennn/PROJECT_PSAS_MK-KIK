@@ -17,14 +17,35 @@ class HomestayController extends Controller
     public function index(Request $request): View
     {
         $pemilik = $request->user()->pemilikHomestay()->firstOrFail();
+        $q = $request->query('q');
+        $status = $request->query('status');
 
-        $homestays = $pemilik->homestay()
+        $query = $pemilik->homestay()
             ->with('fasilitas')
             ->withCount(['kamar', 'paket'])
-            ->orderByDesc('id_homestay')
-            ->paginate(9);
+            ->when($q, function ($builder, $q) {
+                $builder->where(function ($sub) use ($q) {
+                    $sub->where('nama_homestay', 'like', "%{$q}%")
+                        ->orWhere('alamat', 'like', "%{$q}%");
+                });
+            })
+            ->when($status, function ($builder, $status) {
+                $builder->where('status_verifikasi', $status);
+            })
+            ->orderByDesc('id_homestay');
 
-        return view('pemilik.homestay.index', compact('homestays'));
+        $homestays = $query->paginate(9)->withQueryString();
+
+        $allHomestays = $pemilik->homestay()->withCount('kamar')->get();
+        $stats = [
+            'total' => $allHomestays->count(),
+            'disetujui' => $allHomestays->where('status_verifikasi', StatusVerifikasi::Disetujui)->count(),
+            'menunggu' => $allHomestays->where('status_verifikasi', StatusVerifikasi::Menunggu)->count(),
+            'ditolak' => $allHomestays->where('status_verifikasi', StatusVerifikasi::Ditolak)->count(),
+            'total_kamar' => $allHomestays->sum('kamar_count'),
+        ];
+
+        return view('pemilik.homestay.index', compact('homestays', 'stats', 'q', 'status'));
     }
 
     public function create(): View
@@ -55,7 +76,7 @@ class HomestayController extends Controller
 
         return redirect()
             ->route('pemilik.homestay.index')
-            ->with('success', 'Homestay "'.$homestay->nama_homestay.'" berhasil diajukan. Admin desa akan memverifikasinya.');
+            ->with('success', 'Homestay "'.$homestay->nama_homestay.'" berhasil diajukan. Admin Pokdarwis akan segera memverifikasinya.');
     }
 
     public function edit(Homestay $homestay): View
@@ -92,6 +113,26 @@ class HomestayController extends Controller
 
         return redirect()
             ->route('pemilik.homestay.index')
-            ->with('success', 'Data homestay berhasil diperbarui.');
+            ->with('success', 'Data homestay "'.$homestay->nama_homestay.'" berhasil diperbarui.');
+    }
+
+    public function destroy(Homestay $homestay): RedirectResponse
+    {
+        $this->authorize('delete', $homestay);
+
+        if ($homestay->booking()->exists()) {
+            return back()->with('error', 'Homestay tidak dapat dihapus karena memiliki riwayat pemesanan atau keuangan.');
+        }
+
+        DB::transaction(function () use ($homestay) {
+            $homestay->fasilitas()->detach();
+            $homestay->paket()->delete();
+            $homestay->kamar()->delete();
+            $homestay->delete();
+        });
+
+        return redirect()
+            ->route('pemilik.homestay.index')
+            ->with('success', 'Homestay "'.$homestay->nama_homestay.'" berhasil dihapus.');
     }
 }

@@ -12,18 +12,18 @@
 
     <x-form.input
         name="nama_paket"
-        label="Nama paket"
+        label="Nama Paket Wisata"
         :value="$isEdit ? $paket->nama_paket : null"
-        placeholder="contoh: Trekking Terasering"
+        placeholder="Contoh: Trekking Sawah Terasering & Sunrise"
         required
     />
 
     <x-form.textarea
         name="deskripsi"
-        label="Deskripsi paket"
+        label="Deskripsi Aktivitas"
         :value="$isEdit ? $paket->deskripsi : null"
         rows="4"
-        placeholder="Jelaskan aktivitas, lokasi, dan apa yang didapat peserta."
+        placeholder="Jelaskan rute perjalanan, pengalaman lokal yang didapat, pemandu warga, atau suguhan kuliner khas."
         required
     />
 
@@ -31,7 +31,7 @@
         <x-form.input
             name="harga"
             type="number"
-            label="Harga per peserta (Rp)"
+            label="Tarif / Peserta (Rp)"
             :value="$isEdit ? (int) $paket->harga : null"
             min="0"
             step="5000"
@@ -41,15 +41,26 @@
 
         <x-form.input
             name="durasi"
-            label="Durasi"
+            label="Estimasi Durasi"
             :value="$isEdit ? $paket->durasi : null"
-            placeholder="contoh: 2 jam"
+            placeholder="Contoh: 2 - 3 Jam"
             required
         />
     </div>
 
-    <div class="flex flex-col gap-2 pt-2 sm:flex-row sm:justify-end">
-        <x-button :href="route('pemilik.homestay.paket.index', $isEdit ? $paket->homestay : $homestay)" variant="secondary">Batal</x-button>
-        <x-button type="submit">{{ $isEdit ? 'Simpan Perubahan' : 'Tambah Paket' }}</x-button>
+    <div class="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-end gap-2 pt-2">
+        <a
+            href="{{ route('pemilik.homestay.paket.index', $isEdit ? $paket->homestay : $homestay) }}"
+            class="inline-flex items-center justify-center px-4 py-2.5 rounded-full border border-stone-200 bg-white hover:bg-stone-50 text-stone-700 text-xs font-semibold shadow-2xs transition-all"
+        >
+            <span>Batal</span>
+        </a>
+        <button
+            type="submit"
+            class="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-full bg-[#13391b] hover:bg-[#0e2c14] text-white text-xs font-bold shadow-xs hover:shadow-md transition-all cursor-pointer"
+        >
+            <span class="material-symbols-outlined text-sm">check</span>
+            <span>{{ $isEdit ? 'Simpan Perubahan' : 'Tambah Paket Wisata' }}</span>
+        </button>
     </div>
 </form>

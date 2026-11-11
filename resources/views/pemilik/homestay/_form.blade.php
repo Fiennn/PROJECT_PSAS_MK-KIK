@@ -12,63 +12,93 @@
         @method($method)
     @endif
 
-    <x-card>
-        <h2 class="font-display text-xl font-semibold text-forest-950">Informasi homestay</h2>
-        <p class="mt-1 text-sm text-stone-500">Data ini akan tampil di halaman publik setelah disetujui admin desa wisata.</p>
+    <!-- Informasi Utama Homestay -->
+    <div class="rounded-3xl border border-stone-200 bg-white p-6 sm:p-8 shadow-xs">
+        <div class="flex items-center gap-2 pb-4 border-b border-stone-100 mb-6">
+            <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50 text-[#13391b]">
+                <span class="material-symbols-outlined text-lg">home_work</span>
+            </span>
+            <div>
+                <h2 class="text-lg font-extrabold text-stone-900">Informasi Unit Homestay</h2>
+                <p class="text-xs text-stone-500">Data ini akan tampil di katalog publik desa wisata setelah disetujui Pokdarwis.</p>
+            </div>
+        </div>
 
-        <div class="mt-5 space-y-5">
+        <div class="space-y-5">
             <x-form.input
                 name="nama_homestay"
-                label="Nama homestay"
+                label="Nama Homestay"
                 :value="$isEdit ? $homestay->nama_homestay : null"
-                placeholder="contoh: Homestay Rumah Kayu"
+                placeholder="Contoh: Homestay Rumah Kayu Asri"
                 required
             />
 
             <x-form.input
                 name="alamat"
-                label="Alamat lengkap"
+                label="Alamat Lengkap Homestay"
                 :value="$isEdit ? $homestay->alamat : null"
-                placeholder="Nama desa, kecamatan, kabupaten, provinsi"
+                placeholder="Dusun, RT/RW, Desa Wisata, Kecamatan, Kabupaten"
                 required
             />
 
             <x-form.textarea
                 name="deskripsi"
-                label="Deskripsi homestay"
+                label="Deskripsi & Pengalaman Menginap"
                 :value="$isEdit ? $homestay->deskripsi : null"
                 rows="6"
-                placeholder="Ceritakan suasana rumah, pemandangan sekitar, dan pengalaman yang ditawarkan kepada tamu."
+                placeholder="Ceritakan keistimewaan homestay Anda: pemandangan sawah terasering, kesejukan udara lereng gunung, santapan kuliner rumahan, dan keramahan keluarga desa yang menyambut."
                 required
             />
         </div>
-    </x-card>
+    </div>
 
-    <x-card>
-        <h2 class="font-display text-xl font-semibold text-forest-950">Fasilitas</h2>
-        <p class="mt-1 text-sm text-stone-500">Pilih fasilitas yang tersedia untuk tamu.</p>
+    <!-- Pilihan Fasilitas -->
+    <div class="rounded-3xl border border-stone-200 bg-white p-6 sm:p-8 shadow-xs">
+        <div class="flex items-center justify-between pb-4 border-b border-stone-100 mb-6">
+            <div class="flex items-center gap-2">
+                <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-50 text-[#ea580c]">
+                    <span class="material-symbols-outlined text-lg">check_circle</span>
+                </span>
+                <div>
+                    <h2 class="text-lg font-extrabold text-stone-900">Fasilitas yang Disediakan</h2>
+                    <p class="text-xs text-stone-500">Pilih fasilitas yang dapat dinikmati wisatawan selama menginap.</p>
+                </div>
+            </div>
+        </div>
 
-        <div class="mt-4 grid gap-3 sm:grid-cols-2">
+        <div class="grid gap-3 sm:grid-cols-2 md:grid-cols-3">
             @foreach ($fasilitas as $facility)
-                <label class="flex cursor-pointer items-center gap-3 rounded-2xl border border-sand-200 px-4 py-3 text-sm text-stone-700 transition hover:border-forest-300 hover:bg-forest-50/40">
+                <label class="relative flex cursor-pointer items-center gap-3 rounded-2xl border border-stone-200 p-3.5 text-xs font-semibold text-stone-800 transition hover:border-emerald-400 hover:bg-emerald-50/30">
                     <input
                         type="checkbox"
                         name="fasilitas[]"
                         value="{{ $facility->id_fasilitas }}"
                         @checked(in_array($facility->id_fasilitas, $selected, true))
-                        class="h-4 w-4 rounded border-sand-300 text-forest-700 focus:ring-forest-400"
+                        class="h-4 w-4 rounded border-stone-300 text-[#13391b] focus:ring-[#13391b]/20"
                     >
-                    {{ $facility->nama_fasilitas }}
+                    <span class="select-none">{{ $facility->nama_fasilitas }}</span>
                 </label>
             @endforeach
         </div>
         @error('fasilitas.*')
-            <p class="error-text">{{ $message }}</p>
+            <p class="mt-2 text-xs text-red-600">{{ $message }}</p>
         @enderror
-    </x-card>
+    </div>
 
-    <div class="flex flex-col gap-3 sm:flex-row sm:justify-end">
-        <x-button :href="route('pemilik.homestay.index')" variant="secondary">Batal</x-button>
-        <x-button type="submit">{{ $isEdit ? 'Simpan Perubahan' : 'Ajukan Homestay' }}</x-button>
+    <!-- Tombol Simpan & Batal -->
+    <div class="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-end gap-3 pt-2">
+        <a
+            href="{{ route('pemilik.homestay.index') }}"
+            class="inline-flex items-center justify-center px-6 py-3 rounded-full border border-stone-200 bg-white hover:bg-stone-50 text-stone-700 text-xs font-semibold shadow-2xs transition-all"
+        >
+            <span>Batal</span>
+        </a>
+        <button
+            type="submit"
+            class="inline-flex items-center justify-center gap-2 px-7 py-3 rounded-full bg-[#13391b] hover:bg-[#0e2c14] text-white text-xs font-bold shadow-xs hover:shadow-md transition-all cursor-pointer"
+        >
+            <span class="material-symbols-outlined text-base">check</span>
+            <span>{{ $isEdit ? 'Simpan Perubahan Homestay' : 'Ajukan Homestay ke Pokdarwis' }}</span>
+        </button>
     </div>
 </form>

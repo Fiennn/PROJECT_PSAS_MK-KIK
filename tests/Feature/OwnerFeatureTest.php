@@ -352,4 +352,53 @@ class OwnerFeatureTest extends TestCase
         $this->actingAs($user)->get(route('pemilik.booking.show', $booking))->assertOk();
         $this->actingAs($user)->get(route('pemilik.pendapatan'))->assertOk();
     }
+
+    public function test_owner_can_delete_unused_homestay(): void
+    {
+        [$user, $pemilik] = $this->owner();
+        $homestay = $this->homestayFor($pemilik);
+        $room = Kamar::factory()->create(['id_homestay' => $homestay->id_homestay]);
+        $package = PaketWisata::factory()->create(['id_homestay' => $homestay->id_homestay]);
+
+        $response = $this->actingAs($user)->delete(route('pemilik.homestay.destroy', $homestay));
+
+        $response->assertRedirect(route('pemilik.homestay.index'));
+        $this->assertDatabaseMissing('homestay', ['id_homestay' => $homestay->id_homestay]);
+        $this->assertDatabaseMissing('kamar', ['id_kamar' => $room->id_kamar]);
+        $this->assertDatabaseMissing('paket_wisata', ['id_paket' => $package->id_paket]);
+    }
+
+    public function test_owner_cannot_delete_homestay_with_bookings(): void
+    {
+        [$user, $pemilik] = $this->owner();
+        $homestay = $this->homestayFor($pemilik);
+        $room = Kamar::factory()->create(['id_homestay' => $homestay->id_homestay]);
+        Booking::factory()->create(['id_kamar' => $room->id_kamar]);
+
+        $response = $this->actingAs($user)->delete(route('pemilik.homestay.destroy', $homestay));
+
+        $response->assertForbidden();
+        $this->assertDatabaseHas('homestay', ['id_homestay' => $homestay->id_homestay]);
+    }
+
+    public function test_owner_can_filter_homestay_and_booking_lists(): void
+    {
+        [$user, $pemilik] = $this->owner();
+        $homestay = $this->homestayFor($pemilik, ['nama_homestay' => 'Rumah Bambu Indah']);
+        $room = Kamar::factory()->create(['id_homestay' => $homestay->id_homestay, 'nama_kamar' => 'Kamar Dahlia']);
+        $booking = Booking::factory()->create([
+            'id_kamar' => $room->id_kamar,
+            'status' => StatusBooking::MenungguVerifikasi->value,
+        ]);
+
+        $this->actingAs($user)
+            ->get(route('pemilik.homestay.index', ['q' => 'Bambu', 'status' => $homestay->status_verifikasi->value]))
+            ->assertOk()
+            ->assertSee('Rumah Bambu Indah');
+
+        $this->actingAs($user)
+            ->get(route('pemilik.booking.index', ['q' => 'Dahlia', 'status' => 'menunggu_verifikasi']))
+            ->assertOk()
+            ->assertSee('Dahlia');
+    }
 }
