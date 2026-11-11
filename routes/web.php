@@ -111,7 +111,12 @@ Route::middleware(['auth', 'active', 'role:admin'])
         Route::patch('/users/{user}/status', [AdminUserController::class, 'toggleStatus'])->name('users.status');
 
         Route::get('/homestay', [AdminHomestayVerificationController::class, 'index'])->name('homestay.index');
+        Route::get('/homestay/create', [AdminHomestayVerificationController::class, 'create'])->name('homestay.create');
+        Route::post('/homestay', [AdminHomestayVerificationController::class, 'store'])->name('homestay.store');
         Route::get('/homestay/{homestay}', [AdminHomestayVerificationController::class, 'show'])->name('homestay.show');
+        Route::get('/homestay/{homestay}/edit', [AdminHomestayVerificationController::class, 'edit'])->name('homestay.edit');
+        Route::put('/homestay/{homestay}', [AdminHomestayVerificationController::class, 'update'])->name('homestay.update');
+        Route::delete('/homestay/{homestay}', [AdminHomestayVerificationController::class, 'destroy'])->name('homestay.destroy');
         Route::patch('/homestay/{homestay}/setujui', [AdminHomestayVerificationController::class, 'approve'])->name('homestay.approve');
         Route::patch('/homestay/{homestay}/tolak', [AdminHomestayVerificationController::class, 'reject'])->name('homestay.reject');
 
