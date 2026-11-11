@@ -7,6 +7,15 @@ use App\Models\User;
 
 class HomestayPolicy
 {
+    public function before(User $user, string $ability): ?bool
+    {
+        if ($user->role->value === 'admin') {
+            return true;
+        }
+
+        return null;
+    }
+
     public function update(User $user, Homestay $homestay): bool
     {
         return $user->role->value === 'pemilik'

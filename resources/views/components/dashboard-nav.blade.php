@@ -14,7 +14,7 @@
         'admin' => [
             ['route' => 'admin.dashboard', 'label' => 'Ringkasan', 'active' => 'admin.dashboard', 'icon' => 'dashboard'],
             ['route' => 'admin.users.index', 'label' => 'Pengguna', 'active' => 'admin.users.*', 'icon' => 'manage_accounts'],
-            ['route' => 'admin.homestay.index', 'label' => 'Verifikasi Homestay', 'active' => 'admin.homestay.*', 'icon' => 'verified'],
+            ['route' => 'admin.homestay.index', 'label' => 'Kelola Homestay', 'active' => 'admin.homestay.*', 'icon' => 'cottage'],
             ['route' => 'admin.pembayaran.index', 'label' => 'Pembayaran', 'active' => 'admin.pembayaran.*', 'icon' => 'account_balance_wallet'],
             ['route' => 'admin.fasilitas.index', 'label' => 'Fasilitas', 'active' => 'admin.fasilitas.*', 'icon' => 'list_alt'],
             ['route' => 'admin.laporan.booking', 'label' => 'Laporan', 'active' => 'admin.laporan.*', 'icon' => 'analytics'],

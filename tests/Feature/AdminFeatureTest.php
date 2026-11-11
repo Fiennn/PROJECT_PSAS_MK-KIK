@@ -141,6 +141,66 @@ class AdminFeatureTest extends TestCase
         $this->get(route('homestay.index'))->assertOk()->assertSee('Homestay Uji Publik');
     }
 
+    public function test_admin_can_create_new_homestay_directly(): void
+    {
+        $admin = $this->admin();
+        $owner = User::factory()->pemilik()->create();
+        $pemilik = PemilikHomestay::factory()->create(['id_user' => $owner->id_user]);
+        $facility = Fasilitas::factory()->create();
+
+        $this->actingAs($admin)
+            ->get(route('admin.homestay.create'))
+            ->assertOk()
+            ->assertSee('Tambah Homestay Baru');
+
+        $response = $this->actingAs($admin)->post(route('admin.homestay.store'), [
+            'id_pemilik' => $pemilik->id_pemilik,
+            'nama_homestay' => 'Homestay Dibuat Admin',
+            'deskripsi' => 'Deskripsi homestay oleh admin desa.',
+            'alamat' => 'Desa Wisata Indah RT 01',
+            'status_verifikasi' => StatusVerifikasi::Disetujui->value,
+            'fasilitas' => [$facility->id_fasilitas],
+        ]);
+
+        $homestay = Homestay::where('nama_homestay', 'Homestay Dibuat Admin')->firstOrFail();
+        $response->assertRedirect(route('admin.homestay.show', $homestay));
+        $this->assertSame(StatusVerifikasi::Disetujui, $homestay->status_verifikasi);
+        $this->assertTrue($homestay->fasilitas->contains($facility));
+    }
+
+    public function test_admin_can_update_any_homestay_details(): void
+    {
+        $admin = $this->admin();
+        $homestay = $this->homestay();
+
+        $this->actingAs($admin)
+            ->get(route('admin.homestay.edit', $homestay))
+            ->assertOk()
+            ->assertSee($homestay->nama_homestay);
+
+        $response = $this->actingAs($admin)->put(route('admin.homestay.update', $homestay), [
+            'id_pemilik' => $homestay->id_pemilik,
+            'nama_homestay' => 'Homestay Diperbarui Admin',
+            'deskripsi' => 'Deskripsi baru setelah diubah.',
+            'alamat' => 'Alamat baru desa',
+            'status_verifikasi' => StatusVerifikasi::Disetujui->value,
+        ]);
+
+        $response->assertRedirect(route('admin.homestay.show', $homestay));
+        $this->assertSame('Homestay Diperbarui Admin', $homestay->fresh()->nama_homestay);
+        $this->assertSame(StatusVerifikasi::Disetujui, $homestay->fresh()->status_verifikasi);
+    }
+
+    public function test_admin_can_delete_homestay_without_bookings(): void
+    {
+        $admin = $this->admin();
+        $homestay = $this->homestay();
+
+        $response = $this->actingAs($admin)->delete(route('admin.homestay.destroy', $homestay));
+        $response->assertRedirect(route('admin.homestay.index'));
+        $this->assertDatabaseMissing('homestay', ['id_homestay' => $homestay->id_homestay]);
+    }
+
     public function test_admin_can_verify_pending_payment(): void
     {
         $admin = $this->admin();
