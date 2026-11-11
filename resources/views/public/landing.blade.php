@@ -990,8 +990,8 @@
     </div>
   </section>
 
-  <!-- SECTION: CARA PESAN (4 LANGKAH MUDAH & PASTI) -->
-  <section class="bg-white border-y border-stone-200 py-20">
+  <!-- SECTION: CARA PESAN (4 LANGKAH MUDAH & PASTI - STAGGERED REVEAL) -->
+  <section id="alur-reservasi" class="bg-white border-y border-stone-200 py-20 overflow-hidden">
     <div class="max-w-7xl mx-auto px-6 lg:px-8">
       
       <div class="text-center max-w-2xl mx-auto mb-16">
@@ -1003,11 +1003,11 @@
         <p class="text-stone-500 text-sm mt-2">Tanpa perantara berbelit, tanpa risiko jadwal bentrok, langsung disambut hangat oleh keluarga desa.</p>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div id="alur-cards-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         
         <!-- Step 1 -->
-        <div class="p-6 rounded-2xl bg-stone-50 border border-stone-200/80 hover:bg-white hover:shadow-md hover:border-emerald-300 transition-all duration-300 group">
-          <div class="w-12 h-12 rounded-xl bg-emerald-100 text-[#13391b] flex items-center justify-center font-extrabold text-lg mb-4 group-hover:scale-110 group-hover:bg-[#13391b] group-hover:text-white transition-all">
+        <div class="step-card opacity-0 translate-y-10 transition-all duration-700 ease-out p-6 rounded-2xl bg-stone-50 border border-stone-200/80 hover:bg-white hover:shadow-xl hover:border-emerald-300 hover:-translate-y-1.5 transition-all duration-300 group" style="transition-delay: 100ms;">
+          <div class="w-12 h-12 rounded-xl bg-emerald-100 text-[#13391b] flex items-center justify-center font-extrabold text-lg mb-4 group-hover:scale-110 group-hover:bg-[#13391b] group-hover:text-white transition-all shadow-xs">
             01
           </div>
           <h3 class="text-base font-bold text-stone-900 group-hover:text-[#1b4d24] transition-colors">Pilih Desa &amp; Homestay</h3>
@@ -1017,19 +1017,19 @@
         </div>
 
         <!-- Step 2 -->
-        <div class="p-6 rounded-2xl bg-stone-50 border border-stone-200/80 hover:bg-white hover:shadow-md hover:border-emerald-300 transition-all duration-300 group">
-          <div class="w-12 h-12 rounded-xl bg-emerald-100 text-[#13391b] flex items-center justify-center font-extrabold text-lg mb-4 group-hover:scale-110 group-hover:bg-[#13391b] group-hover:text-white transition-all">
+        <div class="step-card opacity-0 translate-y-10 transition-all duration-700 ease-out p-6 rounded-2xl bg-white border-2 border-emerald-400/80 shadow-md hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 group" style="transition-delay: 260ms;">
+          <div class="w-12 h-12 rounded-xl bg-[#13391b] text-white flex items-center justify-center font-extrabold text-lg mb-4 group-hover:scale-110 transition-all shadow-xs">
             02
           </div>
-          <h3 class="text-base font-bold text-stone-900 group-hover:text-[#1b4d24] transition-colors">Kunci Tanggal Real-Time</h3>
+          <h3 class="text-base font-bold text-[#1b4d24] transition-colors">Kunci Tanggal Real-Time</h3>
           <p class="text-xs text-stone-600 mt-2 leading-relaxed">
             Sistem kalender pintar langsung mengunci ketersediaan kamar secara real-time. 100% bebas risiko double booking.
           </p>
         </div>
 
         <!-- Step 3 -->
-        <div class="p-6 rounded-2xl bg-stone-50 border border-stone-200/80 hover:bg-white hover:shadow-md hover:border-emerald-300 transition-all duration-300 group">
-          <div class="w-12 h-12 rounded-xl bg-emerald-100 text-[#13391b] flex items-center justify-center font-extrabold text-lg mb-4 group-hover:scale-110 group-hover:bg-[#13391b] group-hover:text-white transition-all">
+        <div class="step-card opacity-0 translate-y-10 transition-all duration-700 ease-out p-6 rounded-2xl bg-stone-50 border border-stone-200/80 hover:bg-white hover:shadow-xl hover:border-emerald-300 hover:-translate-y-1.5 transition-all duration-300 group" style="transition-delay: 420ms;">
+          <div class="w-12 h-12 rounded-xl bg-emerald-100 text-[#13391b] flex items-center justify-center font-extrabold text-lg mb-4 group-hover:scale-110 group-hover:bg-[#13391b] group-hover:text-white transition-all shadow-xs">
             03
           </div>
           <h3 class="text-base font-bold text-stone-900 group-hover:text-[#1b4d24] transition-colors">Bayar Aman &amp; Transparan</h3>
@@ -1039,8 +1039,8 @@
         </div>
 
         <!-- Step 4 -->
-        <div class="p-6 rounded-2xl bg-stone-50 border border-stone-200/80 hover:bg-white hover:shadow-md hover:border-emerald-300 transition-all duration-300 group">
-          <div class="w-12 h-12 rounded-xl bg-emerald-100 text-[#13391b] flex items-center justify-center font-extrabold text-lg mb-4 group-hover:scale-110 group-hover:bg-[#13391b] group-hover:text-white transition-all">
+        <div class="step-card opacity-0 translate-y-10 transition-all duration-700 ease-out p-6 rounded-2xl bg-stone-50 border border-stone-200/80 hover:bg-white hover:shadow-xl hover:border-emerald-300 hover:-translate-y-1.5 transition-all duration-300 group" style="transition-delay: 580ms;">
+          <div class="w-12 h-12 rounded-xl bg-emerald-100 text-[#13391b] flex items-center justify-center font-extrabold text-lg mb-4 group-hover:scale-110 group-hover:bg-[#13391b] group-hover:text-white transition-all shadow-xs">
             04
           </div>
           <h3 class="text-base font-bold text-stone-900 group-hover:text-[#1b4d24] transition-colors">E-Tiket &amp; QR Check-in</h3>
@@ -1646,6 +1646,29 @@
           finaleBgImg.style.transform = `translateY(${translateY}px) scale(${finaleBgImg.classList.contains('scale-100') ? '1.0' : '1.1'})`;
         }
       }, { passive: true });
+    }
+
+    // 6. STAGGERED REVEAL OBSERVER: MUNCUL SATU PERSATU SMOOTH PADA 4 LANGKAH
+    const alurSection = document.getElementById('alur-reservasi');
+    const stepCards = document.querySelectorAll('.step-card');
+
+    if (alurSection && stepCards.length > 0) {
+      const alurObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            stepCards.forEach(card => {
+              card.classList.remove('opacity-0', 'translate-y-10');
+              card.classList.add('opacity-100', 'translate-y-0');
+            });
+            alurObserver.unobserve(entry.target);
+          }
+        });
+      }, {
+        threshold: 0.15,
+        rootMargin: '0px 0px -40px 0px'
+      });
+
+      alurObserver.observe(alurSection);
     }
 
     // 5. SCRIPT INTERAKTIF JADWAL MENGINAP (DATE PICKER)
