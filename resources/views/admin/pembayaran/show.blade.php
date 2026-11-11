@@ -1,11 +1,17 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Tinjau Pembayaran')
-@section('page_title', 'Pembayaran #'.$pembayaran->id_pembayaran)
-@section('page_description', 'Cocokkan nominal transfer dengan total pesanan sebelum memverifikasi.')
+@section('title', 'Tinjau Pembayaran #'.$pembayaran->id_pembayaran)
+@section('page_title', 'Validasi Pembayaran #'.$pembayaran->id_pembayaran)
+@section('page_description', 'Cocokkan bukti transfer wisatawan dengan total tagihan reservasi sebelum memberikan pengesahan Pokdarwis.')
 
 @section('page_actions')
-    <x-button :href="route('admin.pembayaran.index')" variant="secondary">Kembali</x-button>
+    <a
+        href="{{ route('admin.pembayaran.index') }}"
+        class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-stone-200 bg-white hover:bg-stone-50 text-stone-700 text-xs font-semibold shadow-2xs transition-all"
+    >
+        <span class="material-symbols-outlined text-sm">arrow_back</span>
+        <span>Kembali ke Daftar Pembayaran</span>
+    </a>
 @endsection
 
 @section('dashboard')
@@ -13,116 +19,144 @@
         $booking = $pembayaran->booking;
         $homestay = $booking->kamar->homestay;
         $isPending = $pembayaran->status_verifikasi->value === 'menunggu';
+        $diff = (float) $pembayaran->jumlah - (float) $booking->total_harga;
     @endphp
 
     <div class="grid gap-6 lg:grid-cols-[1.35fr_0.65fr] lg:items-start">
         <div class="space-y-6">
-            <x-card>
-                <div class="flex flex-wrap items-start justify-between gap-3">
+            <!-- Kartu Audit Bukti Transfer -->
+            <div class="rounded-3xl border border-stone-200 bg-white p-6 sm:p-8 shadow-xs">
+                <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 pb-6 border-b border-stone-100">
                     <div>
-                        <p class="text-xs font-bold uppercase tracking-[0.18em] text-clay-600">Bukti pembayaran</p>
-                        <h2 class="mt-1 font-display text-2xl font-semibold text-forest-950">{{ $booking->wisatawan->nama_wisatawan }}</h2>
-                        <p class="mt-1 text-sm text-stone-500">{{ $homestay->nama_homestay }} · {{ $booking->kamar->nama_kamar }}</p>
+                        <span class="inline-block px-3 py-1 rounded-full bg-emerald-50 text-[#13391b] text-[11px] font-bold uppercase tracking-wider mb-2">
+                            Audit Keuangan Pokdarwis
+                        </span>
+                        <h2 class="text-2xl font-extrabold text-stone-900 tracking-tight">{{ $booking->wisatawan->nama_wisatawan }}</h2>
+                        <p class="mt-1 text-xs text-stone-500">
+                            Unit: <strong class="text-stone-800">{{ $homestay->nama_homestay }}</strong> &bull; {{ $booking->kamar->nama_kamar }}
+                        </p>
                     </div>
-                    <x-badge :status="$pembayaran->status_verifikasi->value" />
+                    <div class="self-start">
+                        <x-badge :status="$pembayaran->status_verifikasi->value" />
+                    </div>
                 </div>
 
-                <dl class="mt-6 grid gap-5 border-t border-sand-100 pt-5 text-sm sm:grid-cols-2">
-                    <div>
-                        <dt class="text-xs font-semibold uppercase tracking-wider text-stone-400">Nominal ditransfer</dt>
-                        <dd class="mt-1 font-display text-xl font-semibold text-forest-900">{{ rupiah($pembayaran->jumlah) }}</dd>
+                <!-- Perbandingan Nominal -->
+                <div class="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
+                    <div class="rounded-2xl border border-stone-200 bg-stone-50/70 p-4">
+                        <span class="text-[11px] font-bold uppercase tracking-wider text-stone-400">Nominal Transfer</span>
+                        <p class="mt-1 text-base sm:text-lg font-extrabold text-[#13391b]">{{ rupiah($pembayaran->jumlah) }}</p>
+                        <p class="text-[11px] text-stone-500">Sesuai bukti slip</p>
                     </div>
-                    <div>
-                        <dt class="text-xs font-semibold uppercase tracking-wider text-stone-400">Total pesanan</dt>
-                        <dd class="mt-1 font-display text-xl font-semibold text-forest-900">{{ rupiah($booking->total_harga) }}</dd>
-                    </div>
-                    <div>
-                        <dt class="text-xs font-semibold uppercase tracking-wider text-stone-400">Metode</dt>
-                        <dd class="mt-1 font-semibold text-forest-950">{{ $pembayaran->metode }}</dd>
-                    </div>
-                    <div>
-                        <dt class="text-xs font-semibold uppercase tracking-wider text-stone-400">Tanggal bayar</dt>
-                        <dd class="mt-1 font-semibold text-forest-950">{{ $pembayaran->tgl_bayar->format('d/m/Y H:i') }}</dd>
-                    </div>
-                </dl>
 
-                @if ((float) $pembayaran->jumlah !== (float) $booking->total_harga)
-                    <div class="mt-5">
-                        <x-alert type="warning">
-                            Nominal transfer berbeda dengan total pesanan. Pastikan selisih ini memang disepakati sebelum memverifikasi.
-                        </x-alert>
+                    <div class="rounded-2xl border border-stone-200 bg-stone-50/70 p-4">
+                        <span class="text-[11px] font-bold uppercase tracking-wider text-stone-400">Total Tagihan</span>
+                        <p class="mt-1 text-base sm:text-lg font-extrabold text-stone-900">{{ rupiah($booking->total_harga) }}</p>
+                        <p class="text-[11px] text-stone-500">Kamar + Paket</p>
+                    </div>
+
+                    <div class="rounded-2xl border border-stone-200 bg-stone-50/70 p-4">
+                        <span class="text-[11px] font-bold uppercase tracking-wider text-stone-400">Metode Bayar</span>
+                        <p class="mt-1 text-sm font-extrabold text-stone-900">{{ $pembayaran->metode }}</p>
+                        <p class="text-[11px] text-stone-500">Transfer Bank / QRIS</p>
+                    </div>
+
+                    <div class="rounded-2xl border border-stone-200 bg-stone-50/70 p-4">
+                        <span class="text-[11px] font-bold uppercase tracking-wider text-stone-400">Waktu Transfer</span>
+                        <p class="mt-1 text-xs font-extrabold text-stone-900">{{ $pembayaran->tgl_bayar->format('d/m/Y') }}</p>
+                        <p class="text-[11px] text-stone-500">{{ $pembayaran->tgl_bayar->format('H:i') }} WIB</p>
+                    </div>
+                </div>
+
+                @if ($diff != 0)
+                    <div class="mt-5 rounded-2xl border border-amber-300 bg-amber-50 p-4 text-xs text-amber-900 flex items-start gap-3">
+                        <span class="material-symbols-outlined text-amber-600 text-lg shrink-0 mt-0.5">warning</span>
+                        <div>
+                            <p class="font-bold">Perhatian: Nominal Transfer Berbeda dengan Total Tagihan!</p>
+                            <p class="mt-0.5 leading-relaxed">
+                                Bukti transfer tertera <strong>{{ rupiah($pembayaran->jumlah) }}</strong>, sedangkan tagihan pesanan adalah <strong>{{ rupiah($booking->total_harga) }}</strong> (selisih: {{ rupiah(abs($diff)) }}). Pastikan selisih ini telah disepakati sebelum memverifikasi.
+                            </p>
+                        </div>
                     </div>
                 @endif
 
-                <div class="mt-6 border-t border-sand-100 pt-5">
-                    <p class="text-xs font-semibold uppercase tracking-wider text-stone-400">Berkas bukti</p>
+                <!-- Akses Berkas Bukti Transfer -->
+                <div class="mt-6 pt-6 border-t border-stone-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div>
+                        <p class="text-xs font-bold text-stone-900">Berkas Bukti Transfer Wisatawan</p>
+                        <p class="text-[11px] text-stone-500">Berkas tersimpan aman di server privat desa wisata.</p>
+                    </div>
                     <a
                         href="{{ route('pembayaran.bukti', $pembayaran) }}"
                         target="_blank"
-                        rel="noopener"
-                        class="focus-ring mt-3 inline-flex items-center gap-2 rounded-full border border-sand-300 bg-white px-5 py-2.5 text-sm font-bold text-forest-800 transition hover:bg-sand-100"
+                        rel="noopener noreferrer"
+                        class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-[#13391b] hover:bg-[#0e2c14] text-white text-xs font-bold shadow-xs transition-all cursor-pointer"
                     >
-                        Buka bukti transfer
+                        <span class="material-symbols-outlined text-base">visibility</span>
+                        <span>Buka Berkas Bukti Transfer</span>
                     </a>
-                    <p class="mt-2 text-xs text-stone-400">Berkas bersifat privat dan hanya dapat diakses admin serta wisatawan terkait.</p>
                 </div>
-            </x-card>
+            </div>
 
-            <x-card>
-                <h2 class="font-display text-xl font-semibold text-forest-950">Detail pesanan</h2>
-                <dl class="mt-4 grid gap-4 text-sm sm:grid-cols-2">
+            <!-- Detail Reservasi Terkait -->
+            <div class="rounded-3xl border border-stone-200 bg-white p-6 sm:p-8 shadow-xs">
+                <h3 class="text-base font-extrabold text-stone-900 mb-4">Rincian Reservasi Terkait (#{{ $booking->id_booking }})</h3>
+
+                <div class="grid grid-cols-2 gap-4 sm:grid-cols-4 text-xs">
                     <div>
-                        <dt class="text-xs font-semibold uppercase tracking-wider text-stone-400">Check-in</dt>
-                        <dd class="mt-1 font-semibold text-forest-950">{{ tanggal_id($booking->tgl_checkin) }}</dd>
+                        <span class="text-stone-400 font-bold uppercase tracking-wider text-[10px]">Tanggal Check-in</span>
+                        <p class="mt-1 font-bold text-stone-900">{{ tanggal_id($booking->tgl_checkin) }}</p>
                     </div>
                     <div>
-                        <dt class="text-xs font-semibold uppercase tracking-wider text-stone-400">Check-out</dt>
-                        <dd class="mt-1 font-semibold text-forest-950">{{ tanggal_id($booking->tgl_checkout) }}</dd>
+                        <span class="text-stone-400 font-bold uppercase tracking-wider text-[10px]">Tanggal Check-out</span>
+                        <p class="mt-1 font-bold text-stone-900">{{ tanggal_id($booking->tgl_checkout) }}</p>
                     </div>
                     <div>
-                        <dt class="text-xs font-semibold uppercase tracking-wider text-stone-400">Jumlah tamu</dt>
-                        <dd class="mt-1 font-semibold text-forest-950">{{ $booking->jumlah_tamu }} orang</dd>
+                        <span class="text-stone-400 font-bold uppercase tracking-wider text-[10px]">Durasi & Tamu</span>
+                        <p class="mt-1 font-bold text-stone-900">{{ $booking->jumlah_malam }} Malam &bull; {{ $booking->jumlah_tamu }} Tamu</p>
                     </div>
                     <div>
-                        <dt class="text-xs font-semibold uppercase tracking-wider text-stone-400">Status pesanan</dt>
-                        <dd class="mt-1"><x-badge :status="$booking->status->value" /></dd>
+                        <span class="text-stone-400 font-bold uppercase tracking-wider text-[10px]">Status Pesanan</span>
+                        <div class="mt-1"><x-badge :status="$booking->status->value" /></div>
                     </div>
-                </dl>
+                </div>
 
                 @if ($booking->paket->isNotEmpty())
-                    <div class="mt-5 border-t border-sand-100 pt-4">
-                        <p class="text-xs font-semibold uppercase tracking-wider text-stone-400">Paket wisata</p>
-                        <ul class="mt-2 space-y-1.5 text-sm text-stone-600">
-                            @foreach ($booking->paket as $package)
-                                <li class="flex justify-between gap-3">
-                                    <span>{{ $package->nama_paket }} ({{ $package->pivot->jumlah_peserta }} peserta)</span>
-                                    <span class="font-semibold text-forest-900">{{ rupiah($package->pivot->subtotal) }}</span>
+                    <div class="mt-5 pt-4 border-t border-stone-100">
+                        <p class="text-xs font-bold text-stone-700 mb-2">Paket Wisata Tambahan</p>
+                        <ul class="space-y-1.5 text-xs text-stone-600">
+                            @foreach ($booking->paket as $pkg)
+                                <li class="flex justify-between items-center py-1 border-b border-stone-50">
+                                    <span>{{ $pkg->nama_paket }} ({{ $pkg->pivot->jumlah_peserta }} peserta)</span>
+                                    <span class="font-extrabold text-stone-900">{{ rupiah($pkg->pivot->subtotal) }}</span>
                                 </li>
                             @endforeach
                         </ul>
                     </div>
                 @endif
-            </x-card>
+            </div>
         </div>
 
-        <aside class="space-y-4 lg:sticky lg:top-28">
-            <x-card>
-                <h2 class="font-display text-xl font-semibold text-forest-950">Keputusan</h2>
+        <!-- ASIDE: Keputusan Verifikasi & Profil Pemilik -->
+        <div class="space-y-6 lg:sticky lg:top-28">
+            <!-- Keputusan Pokdarwis -->
+            <div class="rounded-3xl border border-stone-200 bg-white p-6 shadow-xs">
+                <h3 class="text-sm font-extrabold text-stone-900 mb-2">Keputusan Validasi Pokdarwis</h3>
 
                 @if ($isPending)
-                    <p class="mt-1 text-sm leading-relaxed text-stone-500">
-                        Verifikasi jika nominal dan bukti transfer sudah sesuai. Menolak pembayaran akan mengembalikan pesanan ke status menunggu pembayaran.
+                    <p class="text-xs text-stone-500 leading-relaxed mb-4">
+                        Periksa kecocokan nomor rekening dan nominal transfer pada berkas. Setelah diverifikasi, pemilik homestay dapat langsung mengonfirmasi penerimaan tamu.
                     </p>
 
-                    <div class="mt-4 space-y-3">
+                    <div class="space-y-3">
                         @can('verify', $pembayaran)
                             <x-confirm-button
                                 :action="route('admin.pembayaran.verify', $pembayaran)"
                                 method="PATCH"
-                                label="Verifikasi Pembayaran"
+                                label="Sahkan & Verifikasi Pembayaran"
                                 title="Verifikasi pembayaran ini?"
-                                message="Pemilik homestay akan dapat mengonfirmasi pesanan setelah pembayaran diverifikasi."
-                                confirm-label="Ya, verifikasi"
+                                message="Pembayaran akan dinyatakan sah dan dana masuk pembukuan Pokdarwis. Pemilik homestay akan menerima notifikasi siap konfirmasi tamu."
+                                confirm-label="Ya, sahkan pembayaran"
                                 variant="primary"
                             />
                         @endcan
@@ -131,32 +165,36 @@
                             <x-confirm-button
                                 :action="route('admin.pembayaran.reject', $pembayaran)"
                                 method="PATCH"
-                                label="Tolak Pembayaran"
-                                title="Tolak bukti pembayaran ini?"
-                                message="Pesanan akan kembali ke status menunggu pembayaran agar wisatawan dapat mengunggah bukti baru."
-                                confirm-label="Ya, tolak"
+                                label="Tolak Bukti Transfer"
+                                title="Tolak bukti transfer ini?"
+                                message="Pesanan akan dikembalikan ke status menunggu pembayaran agar wisatawan dapat mengunggah bukti yang benar."
+                                confirm-label="Ya, tolak bukti"
                                 variant="danger"
                             />
                         @endcan
                     </div>
                 @else
-                    <div class="mt-3">
-                        <x-alert :type="$pembayaran->status_verifikasi->value === 'terverifikasi' ? 'success' : 'warning'">
-                            @if ($pembayaran->status_verifikasi->value === 'terverifikasi')
-                                Pembayaran ini sudah diverifikasi. Pemilik homestay dapat mengonfirmasi pesanan.
-                            @else
-                                Pembayaran ini ditolak. Wisatawan perlu mengunggah bukti transfer baru.
-                            @endif
-                        </x-alert>
+                    <div class="rounded-2xl {{ $pembayaran->status_verifikasi->value === 'terverifikasi' ? 'bg-emerald-50 border border-emerald-200 text-emerald-900' : 'bg-red-50 border border-red-200 text-red-900' }} p-4 text-xs">
+                        <div class="flex items-center gap-2 font-bold mb-1">
+                            <span class="material-symbols-outlined text-base">
+                                {{ $pembayaran->status_verifikasi->value === 'terverifikasi' ? 'check_circle' : 'cancel' }}
+                            </span>
+                            <span>{{ $pembayaran->status_verifikasi->value === 'terverifikasi' ? 'Pembayaran Telah Sah Diverifikasi' : 'Bukti Pembayaran Telah Ditolak' }}</span>
+                        </div>
+                        <p class="text-[11px] leading-relaxed">
+                            {{ $pembayaran->status_verifikasi->value === 'terverifikasi' ? 'Dana telah tercatat dalam kas desa dan pemilik homestay dapat mengonfirmasi kedatangan tamu.' : 'Wisatawan telah diminta untuk mengunggah ulang bukti transfer yang valid.' }}
+                        </p>
                     </div>
                 @endif
-            </x-card>
+            </div>
 
-            <x-card>
-                <p class="text-xs font-bold uppercase tracking-[0.18em] text-clay-600">Pemilik homestay</p>
-                <p class="mt-2 font-semibold text-forest-950">{{ $homestay->pemilik->nama_pemilik }}</p>
-                <p class="mt-1 text-sm text-stone-500">{{ $homestay->pemilik->no_hp }}</p>
-            </x-card>
-        </aside>
+            <!-- Profil Pemilik Homestay -->
+            <div class="rounded-3xl border border-stone-200 bg-white p-6 shadow-xs">
+                <span class="text-[10px] font-bold uppercase tracking-wider text-stone-400">Tuan Rumah Pengelola</span>
+                <p class="mt-2 text-sm font-extrabold text-stone-900">{{ $homestay->pemilik->nama_pemilik }}</p>
+                <p class="text-xs text-stone-500 mt-0.5">{{ $homestay->pemilik->no_hp }}</p>
+                <p class="text-xs text-stone-500 mt-0.5">{{ $homestay->pemilik->alamat }}</p>
+            </div>
+        </div>
     </div>
 @endsection

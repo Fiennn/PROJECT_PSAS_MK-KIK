@@ -36,7 +36,16 @@ class PembayaranController extends Controller
             ->paginate(12)
             ->withQueryString();
 
-        return view('admin.pembayaran.index', compact('payments', 'filters'));
+        $allPayments = Pembayaran::all();
+        $stats = [
+            'total' => $allPayments->count(),
+            'menunggu' => $allPayments->where('status_verifikasi', StatusPembayaran::Menunggu)->count(),
+            'terverifikasi' => $allPayments->where('status_verifikasi', StatusPembayaran::Terverifikasi)->count(),
+            'ditolak' => $allPayments->where('status_verifikasi', StatusPembayaran::Ditolak)->count(),
+            'total_rupiah' => $allPayments->where('status_verifikasi', StatusPembayaran::Terverifikasi)->sum('jumlah'),
+        ];
+
+        return view('admin.pembayaran.index', compact('payments', 'filters', 'stats'));
     }
 
     public function show(Pembayaran $pembayaran): View
