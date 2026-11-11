@@ -108,6 +108,20 @@ php artisan serve
 
 Buka `http://localhost:8000`.
 
+## Aplikasi Android native
+
+Project Android native sederhana tersedia di folder `android/HomeStayGo`.
+
+1. Buka folder tersebut dengan **Android Studio**.
+2. Jalankan backend Laravel:
+
+```bash
+php artisan serve
+```
+
+3. Untuk emulator Android, base URL API sudah diatur ke `http://10.0.2.2:8000/`.
+4. Untuk HP fisik, ubah `BASE_URL` di `ApiClient.kt` menjadi IP komputer.
+
 Untuk mode pengembangan frontend:
 
 ```bash
