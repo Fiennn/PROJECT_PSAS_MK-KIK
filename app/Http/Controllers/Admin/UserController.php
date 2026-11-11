@@ -36,7 +36,15 @@ class UserController extends Controller
             ->paginate(12)
             ->withQueryString();
 
-        return view('admin.users.index', compact('users', 'filters'));
+        $allUsers = User::all();
+        $stats = [
+            'total' => $allUsers->count(),
+            'wisatawan' => $allUsers->where('role', Role::Wisatawan)->count(),
+            'pemilik' => $allUsers->where('role', Role::Pemilik)->count(),
+            'nonaktif' => $allUsers->where('status_aktif', false)->count(),
+        ];
+
+        return view('admin.users.index', compact('users', 'filters', 'stats'));
     }
 
     public function toggleStatus(Request $request, User $user): RedirectResponse
@@ -48,7 +56,7 @@ class UserController extends Controller
         return back()->with(
             'success',
             $user->status_aktif
-                ? 'Akun '.$user->username.' berhasil diaktifkan.'
+                ? 'Akun '.$user->username.' berhasil diaktifkan kembali.'
                 : 'Akun '.$user->username.' berhasil dinonaktifkan.'
         );
     }

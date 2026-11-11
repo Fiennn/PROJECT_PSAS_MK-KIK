@@ -18,6 +18,10 @@ class DashboardController extends Controller
     {
         $stats = [
             'pengguna' => User::count(),
+            'total_wisatawan' => User::where('role', 'wisatawan')->count(),
+            'total_pemilik' => User::where('role', 'pemilik')->count(),
+            'total_homestay' => Homestay::count(),
+            'homestay_disetujui' => Homestay::where('status_verifikasi', StatusVerifikasi::Disetujui->value)->count(),
             'homestay_menunggu' => Homestay::where('status_verifikasi', StatusVerifikasi::Menunggu->value)->count(),
             'pembayaran_menunggu' => Pembayaran::where('status_verifikasi', StatusPembayaran::Menunggu->value)->count(),
             'booking_bulan_ini' => Booking::whereBetween('tgl_booking', [now()->startOfMonth(), now()->endOfMonth()])->count(),
@@ -36,8 +40,19 @@ class DashboardController extends Controller
             ->limit(5)
             ->get();
 
+        $recentBookings = Booking::with(['wisatawan', 'kamar.homestay', 'pembayaran'])
+            ->orderByDesc('id_booking')
+            ->limit(5)
+            ->get();
+
         $activeBookings = Booking::whereIn('status', StatusBooking::activeValues())->count();
 
-        return view('admin.dashboard', compact('stats', 'pendingHomestays', 'pendingPayments', 'activeBookings'));
+        return view('admin.dashboard', compact(
+            'stats',
+            'pendingHomestays',
+            'pendingPayments',
+            'recentBookings',
+            'activeBookings'
+        ));
     }
 }
