@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Pemilik;
 
+use App\Enums\StatusBooking;
 use App\Enums\StatusKamar;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Pemilik\StoreKamarRequest;
+use App\Models\Booking;
 use App\Models\Homestay;
 use App\Models\Kamar;
 use Illuminate\Http\RedirectResponse;
@@ -19,8 +21,30 @@ class KamarController extends Controller
         $homestay->load('fasilitas');
         $kamar = $homestay->kamar()->orderBy('harga_per_malam')->get();
 
-        return view('pemilik.kamar.index', compact('homestay', 'kamar'));
+        $roomBookings = Booking::query()
+            ->whereIn('id_kamar', $kamar->pluck('id_kamar'))
+            ->whereIn('status', [
+                StatusBooking::Dikonfirmasi->value,
+                StatusBooking::MenungguVerifikasi->value,
+                StatusBooking::Selesai->value,
+            ])
+            ->with(['wisatawan', 'kamar'])
+            ->get()
+            ->map(fn ($b) => [
+                'id_booking' => $b->id_booking,
+                'kode_tiket' => kode_tiket($b->id_booking),
+                'id_kamar' => $b->id_kamar,
+                'nama_kamar' => $b->kamar->nama_kamar,
+                'tamu' => $b->wisatawan->nama_wisatawan ?? 'Wisatawan',
+                'checkin' => $b->tgl_checkin->toDateString(),
+                'checkout' => $b->tgl_checkout->toDateString(),
+                'status' => $b->status->value,
+                'status_label' => status_label($b->status->value),
+            ]);
+
+        return view('pemilik.kamar.index', compact('homestay', 'kamar', 'roomBookings'));
     }
+
 
     public function store(StoreKamarRequest $request, Homestay $homestay): RedirectResponse
     {

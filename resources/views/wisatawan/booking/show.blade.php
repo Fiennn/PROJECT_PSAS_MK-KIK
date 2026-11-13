@@ -4,7 +4,16 @@
 @section('page_title', 'Detail Pemesanan')
 
 @section('page_actions')
-    <x-button :href="route('wisatawan.booking.index')" variant="secondary">Kembali ke daftar</x-button>
+    <div class="flex items-center gap-2">
+        @if (in_array($booking->status->value, ['dikonfirmasi', 'selesai']))
+            <a href="{{ route('wisatawan.booking.ticket', $booking) }}"
+               class="inline-flex items-center gap-1.5 rounded-full bg-emerald-800 px-4 py-2 text-xs font-bold text-white shadow hover:bg-emerald-900 transition">
+                <span class="material-symbols-outlined text-sm">qr_code</span>
+                E-Tiket Resmi
+            </a>
+        @endif
+        <x-button :href="route('wisatawan.booking.index')" variant="secondary">Kembali ke daftar</x-button>
+    </div>
 @endsection
 
 @section('dashboard')
@@ -165,6 +174,27 @@
         </div>
 
         <aside class="space-y-4 lg:sticky lg:top-28">
+            @if (in_array($booking->status->value, ['dikonfirmasi', 'selesai']))
+                <div class="rounded-3xl bg-gradient-to-br from-[#13391b] via-[#1b4b24] to-[#0d2813] p-5 text-white shadow-xl shadow-forest-950/25 border border-emerald-900/40">
+                    <div class="flex items-center justify-between">
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-[11px] font-bold text-emerald-200 uppercase tracking-wider">
+                            <span class="material-symbols-outlined text-sm">verified</span>
+                            Tiket Siap
+                        </span>
+                        <span class="font-mono text-xs font-bold text-amber-300">#{{ kode_tiket($booking->id_booking) }}</span>
+                    </div>
+                    <h3 class="mt-3 font-display text-lg font-bold text-white">E-Tiket & Boarding Pass</h3>
+                    <p class="mt-1 text-xs leading-relaxed text-emerald-100/80">
+                        Gunakan kode QR dan E-Tiket resmi ini untuk check-in instan saat tiba di homestay desa binaan Pokdarwis.
+                    </p>
+                    <a href="{{ route('wisatawan.booking.ticket', $booking) }}"
+                       class="mt-4 flex w-full items-center justify-center gap-2 rounded-2xl bg-orange-600 px-4 py-2.5 text-xs font-bold text-white shadow-md transition hover:bg-orange-500 active:scale-95">
+                        <span class="material-symbols-outlined text-base">receipt_long</span>
+                        Buka E-Tiket & Kode QR
+                    </a>
+                </div>
+            @endif
+
             <x-card>
                 <h2 class="font-display text-xl font-semibold text-forest-950">Ringkasan biaya</h2>
                 <dl class="mt-4 space-y-3 text-sm">

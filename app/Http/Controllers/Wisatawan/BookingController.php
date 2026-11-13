@@ -10,7 +10,9 @@ use App\Http\Requests\Wisatawan\StoreBookingRequest;
 use App\Models\Booking;
 use App\Models\Kamar;
 use App\Services\BookingService;
+use App\Services\TicketService;
 use Illuminate\Http\RedirectResponse;
+
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -94,4 +96,29 @@ class BookingController extends Controller
             ->route('wisatawan.booking.show', $booking)
             ->with('success', 'Pemesanan berhasil dibatalkan.');
     }
+
+    public function ticket(Booking $booking, TicketService $ticketService): View|RedirectResponse
+    {
+        $this->authorize('view', $booking);
+
+        if (! in_array($booking->status->value, [StatusBooking::Dikonfirmasi->value, StatusBooking::Selesai->value], true)) {
+            return redirect()
+                ->route('wisatawan.booking.show', $booking)
+                ->with('error', 'E-Tiket resmi Pokdarwis baru dapat diterbitkan setelah pembayaran diverifikasi dan reservasi berstatus Dikonfirmasi.');
+        }
+
+        $booking->load([
+            'wisatawan.user',
+            'kamar.homestay.pemilik.user',
+            'paket',
+            'pembayaran' => fn ($query) => $query->where('status_verifikasi', 'terverifikasi')->orderByDesc('id_pembayaran'),
+        ]);
+
+        $ticketCode = $ticketService->formatTicketCode($booking);
+        $qrPayload = $ticketService->generateVerificationToken($booking);
+        $qrSvg = $ticketService->generateQrCodeSvg($qrPayload, 170);
+
+        return view('wisatawan.booking.ticket', compact('booking', 'ticketCode', 'qrPayload', 'qrSvg'));
+    }
 }
+

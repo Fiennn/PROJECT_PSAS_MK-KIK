@@ -67,3 +67,14 @@ if (! function_exists('status_label')) {
         ][$status] ?? ucfirst(str_replace('_', ' ', $status));
     }
 }
+
+if (! function_exists('kode_tiket')) {
+    /**
+     * Format an official Pokdarwis ticket code: HSG-00042.
+     */
+    function kode_tiket(int|string|null $id): string
+    {
+        return 'HSG-'.str_pad((string) ($id ?? 0), 5, '0', STR_PAD_LEFT);
+    }
+}
+

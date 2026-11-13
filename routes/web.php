@@ -61,6 +61,7 @@ Route::middleware(['auth', 'active', 'role:wisatawan'])
         Route::post('/booking', [BookingController::class, 'store'])->name('booking.store');
         Route::get('/booking', [BookingController::class, 'index'])->name('booking.index');
         Route::get('/booking/{booking}', [BookingController::class, 'show'])->name('booking.show');
+        Route::get('/booking/{booking}/tiket', [BookingController::class, 'ticket'])->name('booking.ticket');
         Route::patch('/booking/{booking}/batal', [BookingController::class, 'cancel'])->name('booking.cancel');
         Route::post('/booking/{booking}/pembayaran', [PembayaranController::class, 'store'])->name('booking.pembayaran');
 
@@ -94,6 +95,7 @@ Route::middleware(['auth', 'active', 'role:pemilik'])
         Route::delete('/paket/{paket}', [PemilikPaketWisataController::class, 'destroy'])->name('paket.destroy');
 
         Route::get('/booking', [PemilikBookingController::class, 'index'])->name('booking.index');
+        Route::post('/booking/validasi-tiket', [PemilikBookingController::class, 'validateTicket'])->name('booking.validate-ticket');
         Route::get('/booking/{booking}', [PemilikBookingController::class, 'show'])->name('booking.show');
         Route::patch('/booking/{booking}/konfirmasi', [PemilikBookingController::class, 'confirm'])->name('booking.confirm');
         Route::patch('/booking/{booking}/tolak', [PemilikBookingController::class, 'reject'])->name('booking.reject');

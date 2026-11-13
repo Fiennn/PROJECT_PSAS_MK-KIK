@@ -142,6 +142,49 @@
         </div>
     </div>
 
+    <!-- Card Validasi E-Tiket Tamu Cepat -->
+    <div class="mb-8 rounded-3xl border border-emerald-200 bg-gradient-to-r from-emerald-50 via-white to-stone-50 p-5 sm:p-6 shadow-xs">
+        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+            <div class="flex items-start gap-3.5">
+                <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#13391b] text-emerald-300 shadow-xs">
+                    <span class="material-symbols-outlined text-2xl">qr_code_scanner</span>
+                </div>
+                <div>
+                    <h3 class="text-sm font-extrabold text-stone-900 flex items-center gap-2">
+                        <span>Validasi Check-In E-Tiket Tamu Desa</span>
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-orange-100 text-[#ea580c]">Instan</span>
+                    </h3>
+                    <p class="mt-1 text-xs text-stone-600 max-w-xl leading-relaxed">
+                        Wisatawan tiba di homestay Anda? Masukkan kode tiket (misal: <code class="font-mono font-bold text-emerald-800">HSG-00012</code> atau nomor booking) dari e-tiket tamu untuk cek keaslian pesanan.
+                    </p>
+                </div>
+            </div>
+
+            <form method="POST" action="{{ route('pemilik.booking.validate-ticket') }}" class="flex items-center gap-2 w-full lg:w-auto shrink-0">
+                @csrf
+                <div class="relative flex-1 sm:w-64">
+                    <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-stone-400">
+                        <span class="material-symbols-outlined text-sm">confirmation_number</span>
+                    </span>
+                    <input
+                        type="text"
+                        name="kode_tiket"
+                        required
+                        placeholder="Contoh: HSG-00012"
+                        class="w-full rounded-xl border border-stone-300 bg-white py-2 pl-9 pr-3 text-xs font-mono font-bold text-stone-900 placeholder-stone-400 focus:border-emerald-600 focus:outline-none focus:ring-1 focus:ring-emerald-600"
+                    />
+                </div>
+                <button
+                    type="submit"
+                    class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#13391b] hover:bg-[#0e2c14] text-white text-xs font-bold shadow-xs transition-all active:scale-95 shrink-0"
+                >
+                    <span class="material-symbols-outlined text-sm">verified_user</span>
+                    <span>Cek Tiket</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
     <!-- Grid Utama: 2 Kolom (Konten Utama & Sidebar Informasi) -->
     <div class="grid gap-8 lg:grid-cols-[1.55fr_1fr]">
         <!-- KOLOM KIRI (UTAMA) -->

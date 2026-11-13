@@ -135,7 +135,39 @@
                     @endforeach
                 </div>
             </fieldset>
+
+            @if(!empty($filters['suasana']))
+                <input type="hidden" name="suasana" value="{{ $filters['suasana'] }}">
+            @endif
         </form>
+
+        <!-- Curated Village Experience Chips -->
+        <div class="mt-6 flex flex-wrap items-center gap-2">
+            <span class="text-xs font-bold text-stone-500 uppercase tracking-wider mr-1">Suasana:</span>
+            @php
+                $activeSuasana = $filters['suasana'] ?? '';
+                $suasanaList = [
+                    '' => 'Semua Suasana',
+                    'sawah' => '🌾 Sawah Terasering',
+                    'gunung' => '🏔️ Lereng Gunung Sejuk',
+                    'budaya' => '🏛️ Rumah Adat & Budaya',
+                    'keluarga' => '👨‍👩‍👧 Edukasi & Keluarga',
+                    'sungai' => '🚣 Petualangan Alam',
+                ];
+            @endphp
+            @foreach ($suasanaList as $key => $label)
+                @php
+                    $params = array_filter(array_merge(request()->query(), ['suasana' => $key ?: null, 'page' => null]));
+                    $isActive = ($activeSuasana === $key);
+                @endphp
+                <a
+                    href="{{ route('homestay.index', $params) }}"
+                    class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all shadow-2xs {{ $isActive ? 'bg-[#13391b] text-white shadow-xs' : 'bg-white border border-stone-200 text-stone-700 hover:bg-stone-50' }}"
+                >
+                    <span>{{ $label }}</span>
+                </a>
+            @endforeach
+        </div>
 
         <!-- Search Result Header -->
         <div class="mt-8 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
