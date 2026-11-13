@@ -17,7 +17,9 @@ use App\Http\Controllers\Pemilik\PendapatanController as PemilikPendapatanContro
 use App\Http\Controllers\Public\CatalogController;
 use App\Http\Controllers\Public\HomestayController;
 use App\Http\Controllers\Public\LandingController;
+use App\Http\Controllers\Public\RadarController;
 use App\Http\Controllers\Shared\PembayaranProofController;
+
 use App\Http\Controllers\Wisatawan\BookingController;
 use App\Http\Controllers\Wisatawan\DashboardController as WisatawanDashboardController;
 use App\Http\Controllers\Wisatawan\PembayaranController;
@@ -31,6 +33,10 @@ Route::get('/homestay/{homestay}/ketersediaan', [HomestayController::class, 'ava
     ->middleware('throttle:60,1')
     ->name('homestay.availability');
 Route::get('/homestay/{homestay}', [HomestayController::class, 'show'])->name('homestay.show');
+
+Route::get('/radar-ar', [RadarController::class, 'index'])->name('radar.index');
+Route::get('/api/radar-shelters', [RadarController::class, 'api'])->name('radar.api');
+
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [LoginController::class, 'create'])->name('login');

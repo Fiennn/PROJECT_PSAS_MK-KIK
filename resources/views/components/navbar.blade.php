@@ -30,6 +30,12 @@
                 </a>
             @endif
 
+            <a href="{{ route('radar.index') }}" class="px-4 py-2 rounded-full transition-colors flex items-center gap-1.5 {{ request()->routeIs('radar.index') ? 'text-[#13391b] font-bold bg-emerald-100/60' : 'hover:text-[#13391b]' }}">
+                <span class="material-symbols-outlined text-base text-orange-600">radar</span>
+                <span>Radar AR</span>
+                <span class="px-1.5 py-0.5 rounded text-[9px] font-extrabold uppercase bg-orange-100 text-[#ea580c]">Baru</span>
+            </a>
+
             <a href="{{ request()->routeIs('home') ? '#paket' : route('home') . '#paket' }}" class="px-4 py-2 rounded-full hover:text-[#13391b] transition-colors">
                 Paket Wisata
             </a>
@@ -97,6 +103,13 @@
                     <span>Jelajahi Homestay</span>
                 </a>
             @endif
+            <a href="{{ route('radar.index') }}" class="px-3 py-2 rounded-xl text-sm font-bold flex items-center justify-between {{ request()->routeIs('radar.index') ? 'bg-emerald-50 text-[#13391b]' : 'text-stone-700 hover:bg-stone-100' }}">
+                <span class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-base text-orange-600">radar</span>
+                    <span>Radar Penunjuk Arah (AR)</span>
+                </span>
+                <span class="px-1.5 py-0.5 rounded text-[9px] font-extrabold uppercase bg-orange-100 text-[#ea580c]">Baru</span>
+            </a>
             <a href="{{ request()->routeIs('home') ? '#paket' : route('home') . '#paket' }}" @click="open = false" class="px-3 py-2 rounded-xl text-sm font-semibold text-stone-700 hover:bg-stone-100">
                 Paket Wisata
             </a>
