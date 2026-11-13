@@ -116,4 +116,30 @@ class PublicCatalogTest extends TestCase
             'checkout' => now()->toDateString(),
         ]))->assertUnprocessable()->assertJsonValidationErrors('checkin');
     }
+
+    public function test_catalog_filters_by_suasana_experience(): void
+    {
+        $sawah = Homestay::factory()->create(['nama_homestay' => 'Griya Sawah Terasering Indah']);
+        Kamar::factory()->create(['id_homestay' => $sawah->id_homestay]);
+
+        $gunung = Homestay::factory()->create(['nama_homestay' => 'Villa Puncak Lereng Gunung']);
+        Kamar::factory()->create(['id_homestay' => $gunung->id_homestay]);
+
+        $this->get('/homestay?suasana=sawah')
+            ->assertOk()
+            ->assertSee('Griya Sawah Terasering Indah')
+            ->assertDontSee('Villa Puncak Lereng Gunung');
+    }
+
+    public function test_homestay_show_renders_google_maps_route_and_etiquette(): void
+    {
+        $homestay = Homestay::factory()->create(['nama_homestay' => 'Homestay Harmoni Desa']);
+        Kamar::factory()->create(['id_homestay' => $homestay->id_homestay]);
+
+        $this->get(route('homestay.show', $homestay))
+            ->assertOk()
+            ->assertSee('Buka Rute di Google Maps')
+            ->assertSee('Kearifan Lokal Desa');
+    }
 }
+

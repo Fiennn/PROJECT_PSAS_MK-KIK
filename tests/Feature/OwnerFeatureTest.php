@@ -401,4 +401,58 @@ class OwnerFeatureTest extends TestCase
             ->assertOk()
             ->assertSee('Dahlia');
     }
+
+    public function test_owner_can_validate_ticket_code_for_own_homestay(): void
+    {
+        [$user, $pemilik] = $this->owner();
+        $homestay = $this->homestayFor($pemilik);
+        $kamar = Kamar::factory()->create(['id_homestay' => $homestay->id_homestay]);
+
+        $booking = Booking::factory()->create([
+            'id_kamar' => $kamar->id_kamar,
+            'status' => StatusBooking::Dikonfirmasi,
+        ]);
+
+        $this->actingAs($user)
+            ->post(route('pemilik.booking.validate-ticket'), [
+                'kode_tiket' => 'HSG-'.str_pad((string) $booking->id_booking, 5, '0', STR_PAD_LEFT),
+            ])
+            ->assertRedirect(route('pemilik.booking.show', $booking))
+            ->assertSessionHas('success');
+    }
+
+    public function test_owner_cannot_validate_ticket_for_another_homestay(): void
+    {
+        [$user] = $this->owner();
+        [, $otherOwner] = $this->owner();
+        $homestay = $this->homestayFor($otherOwner);
+        $kamar = Kamar::factory()->create(['id_homestay' => $homestay->id_homestay]);
+
+        $booking = Booking::factory()->create([
+            'id_kamar' => $kamar->id_kamar,
+            'status' => StatusBooking::Dikonfirmasi,
+        ]);
+
+        $this->actingAs($user)
+            ->from(route('pemilik.booking.index'))
+            ->post(route('pemilik.booking.validate-ticket'), [
+                'kode_tiket' => 'HSG-'.str_pad((string) $booking->id_booking, 5, '0', STR_PAD_LEFT),
+            ])
+            ->assertRedirect(route('pemilik.booking.index'))
+            ->assertSessionHas('error');
+    }
+
+    public function test_owner_room_page_provides_calendar_occupancy_data(): void
+    {
+        [$user, $pemilik] = $this->owner();
+        $homestay = $this->homestayFor($pemilik);
+        Kamar::factory()->create(['id_homestay' => $homestay->id_homestay]);
+
+        $this->actingAs($user)
+            ->get(route('pemilik.homestay.kamar.index', $homestay))
+            ->assertOk()
+            ->assertSee('Kalender Okupansi Visual')
+            ->assertSee('Jadwal Okupansi & Ketersediaan Kamar', false);
+    }
 }
+

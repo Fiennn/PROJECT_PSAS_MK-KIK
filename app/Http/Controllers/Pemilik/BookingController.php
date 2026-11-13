@@ -6,7 +6,9 @@ use App\Enums\StatusBooking;
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\Homestay;
+use App\Services\TicketService;
 use Illuminate\Http\RedirectResponse;
+
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -62,7 +64,38 @@ class BookingController extends Controller
         ));
     }
 
+    public function validateTicket(Request $request, TicketService $ticketService): RedirectResponse
+    {
+        $pemilik = $request->user()->pemilikHomestay()->firstOrFail();
+        $input = (string) $request->input('kode_tiket', '');
+
+        $bookingId = $ticketService->parseCode($input);
+
+        if (! $bookingId) {
+            return back()->with('error', 'Format kode e-tiket tidak valid. Contoh format: HSG-00012 atau masukkan nomor booking.');
+        }
+
+        $booking = Booking::query()
+            ->where('id_booking', $bookingId)
+            ->whereHas('kamar.homestay', fn ($h) => $h->where('id_pemilik', $pemilik->id_pemilik))
+            ->with(['wisatawan.user', 'kamar.homestay', 'pembayaran'])
+            ->first();
+
+        if (! $booking) {
+            return back()->with('error', 'E-Tiket #'.$input.' tidak ditemukan untuk homestay milik Anda. Pastikan tamu memesan pada penginapan Anda.');
+        }
+
+        if ($booking->status === StatusBooking::Dibatalkan || $booking->status === StatusBooking::Ditolak) {
+            return back()->with('error', 'E-Tiket #'.kode_tiket($booking->id_booking).' tidak berlaku (Status pesanan: '.status_label($booking->status->value).').');
+        }
+
+        return redirect()
+            ->route('pemilik.booking.show', $booking)
+            ->with('success', 'E-Tiket VALID! Tamu: '.($booking->wisatawan->nama_wisatawan ?? 'Wisatawan').' (Kamar '.$booking->kamar->nama_kamar.'). Status pesanan: '.status_label($booking->status->value).'.');
+    }
+
     public function show(Booking $booking): View
+
     {
         $this->authorize('view', $booking);
 

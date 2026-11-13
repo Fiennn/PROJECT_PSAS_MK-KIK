@@ -18,6 +18,7 @@ class CatalogController extends Controller
             'kota' => ['nullable', 'string', 'max:100'],
             'harga_max' => ['nullable', 'numeric', 'min:0'],
             'kapasitas' => ['nullable', 'integer', 'min:1', 'max:20'],
+            'suasana' => ['nullable', 'string', 'max:50'],
             'fasilitas' => ['nullable', 'array'],
             'fasilitas.*' => ['integer', 'exists:fasilitas,id_fasilitas'],
         ]);
@@ -38,6 +39,27 @@ class CatalogController extends Controller
                 'kamar as kamar_tersedia_count' => fn ($builder) => $builder->where('status', StatusKamar::Tersedia->value),
             ])
             ->withRatingStats();
+
+        if (! empty($filters['suasana'])) {
+            $suasanaMap = [
+                'sawah' => ['sawah', 'terasering', 'padi', 'hijau'],
+                'gunung' => ['gunung', 'lereng', 'bukit', 'sejuk', 'lembah', 'baturraden'],
+                'budaya' => ['adat', 'budaya', 'joglo', 'tradisional', 'bambu', 'kayu', 'jati', 'penglipuran'],
+                'keluarga' => ['keluarga', 'edukasi', 'ramah', 'asri', 'taman'],
+                'sungai' => ['sungai', 'serayu', 'air', 'alam', 'lestari'],
+            ];
+
+            $keywords = $suasanaMap[$filters['suasana']] ?? [$filters['suasana']];
+
+            $query->where(function ($sub) use ($keywords) {
+                foreach ($keywords as $kw) {
+                    $sub->orWhere('nama_homestay', 'like', '%'.$kw.'%')
+                        ->orWhere('deskripsi', 'like', '%'.$kw.'%')
+                        ->orWhere('alamat', 'like', '%'.$kw.'%');
+                }
+            });
+        }
+
 
         if (! empty($filters['q'])) {
             $searchTerm = $filters['q'];

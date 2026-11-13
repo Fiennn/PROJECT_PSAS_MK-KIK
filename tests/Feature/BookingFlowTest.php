@@ -393,4 +393,58 @@ class BookingFlowTest extends TestCase
             ->assertSee('Homestay')
             ->assertSee('Lihat detail');
     }
+
+    public function test_tourist_can_view_ticket_for_confirmed_booking(): void
+    {
+        [$user, $wisatawan] = $this->wisatawanUser();
+        $kamar = $this->room();
+
+        $booking = Booking::factory()->create([
+            'id_wisatawan' => $wisatawan->id_wisatawan,
+            'id_kamar' => $kamar->id_kamar,
+            'status' => StatusBooking::Dikonfirmasi,
+        ]);
+
+        $this->actingAs($user)
+            ->get(route('wisatawan.booking.ticket', $booking))
+            ->assertOk()
+            ->assertSee('Surat Reservasi Resmi Pokdarwis')
+            ->assertSee('HSG-'.str_pad((string) $booking->id_booking, 5, '0', STR_PAD_LEFT))
+            ->assertSee('TERVERIFIKASI & LUNAS', false);
+    }
+
+    public function test_tourist_cannot_view_ticket_for_unconfirmed_booking(): void
+    {
+        [$user, $wisatawan] = $this->wisatawanUser();
+        $kamar = $this->room();
+
+        $booking = Booking::factory()->create([
+            'id_wisatawan' => $wisatawan->id_wisatawan,
+            'id_kamar' => $kamar->id_kamar,
+            'status' => StatusBooking::MenungguPembayaran,
+        ]);
+
+        $this->actingAs($user)
+            ->get(route('wisatawan.booking.ticket', $booking))
+            ->assertRedirect(route('wisatawan.booking.show', $booking))
+            ->assertSessionHas('error');
+    }
+
+    public function test_other_tourist_cannot_view_ticket(): void
+    {
+        [$user] = $this->wisatawanUser();
+        [, $lain] = $this->wisatawanUser();
+        $kamar = $this->room();
+
+        $booking = Booking::factory()->create([
+            'id_wisatawan' => $lain->id_wisatawan,
+            'id_kamar' => $kamar->id_kamar,
+            'status' => StatusBooking::Dikonfirmasi,
+        ]);
+
+        $this->actingAs($user)
+            ->get(route('wisatawan.booking.ticket', $booking))
+            ->assertForbidden();
+    }
 }
+

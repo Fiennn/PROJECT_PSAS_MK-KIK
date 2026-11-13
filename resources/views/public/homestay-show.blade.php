@@ -437,6 +437,63 @@
                     </div>
                 </div>
 
+                <!-- Card Navigasi Google Maps & Patokan Dusun -->
+                <div class="rounded-3xl border border-stone-200 bg-white p-6 shadow-xs">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="material-symbols-outlined text-orange-600 text-xl">map</span>
+                        <h3 class="text-base font-extrabold text-stone-900">Rute & Panduan Lokasi</h3>
+                    </div>
+                    <p class="text-xs text-stone-600 leading-relaxed">
+                        {{ $homestay->alamat }}
+                    </p>
+                    <div class="mt-3 rounded-2xl bg-stone-50 border border-stone-200/80 p-3 text-xs text-stone-600 space-y-1.5">
+                        <div class="flex items-start gap-1.5">
+                            <span class="material-symbols-outlined text-emerald-800 text-sm mt-0.5">signpost</span>
+                            <span><strong>Patokan Dusun:</strong> Masuk ke gapura utama desa wisata, ikuti papan petunjuk warga menuju homestay.</span>
+                        </div>
+                        <div class="flex items-start gap-1.5">
+                            <span class="material-symbols-outlined text-emerald-800 text-sm mt-0.5">local_parking</span>
+                            <span><strong>Akses Kendaraan:</strong> Mobil dan motor dapat masuk hingga halaman homestay warga.</span>
+                        </div>
+                    </div>
+                    <a href="https://www.google.com/maps/search/?api=1&query={{ urlencode($homestay->nama_homestay . ' ' . $homestay->alamat) }}"
+                       target="_blank" rel="noopener noreferrer"
+                       class="mt-4 w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full border border-stone-300 bg-white hover:bg-stone-50 text-stone-900 text-xs font-bold shadow-xs transition-all">
+                        <span class="material-symbols-outlined text-orange-600 text-base">directions</span>
+                        <span>Buka Rute di Google Maps</span>
+                        <span class="material-symbols-outlined text-xs text-stone-400">open_in_new</span>
+                    </a>
+                </div>
+
+                <!-- Card Kearifan Lokal & Tata Krama Desa (Desa Wisata Etiquette) -->
+                <div class="rounded-3xl border border-emerald-200 bg-gradient-to-br from-emerald-50/60 to-white p-6 shadow-xs">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="material-symbols-outlined text-emerald-800 text-xl">volunteer_activism</span>
+                        <h3 class="text-base font-extrabold text-stone-900">Kearifan Lokal Desa</h3>
+                    </div>
+                    <p class="text-xs text-stone-600 leading-relaxed">
+                        Sebagai tamu kehormatan di desa, kami mengedepankan etika saling menghargai bersama warga lokal:
+                    </p>
+                    <ul class="mt-3 space-y-2 text-xs text-stone-700">
+                        <li class="flex items-start gap-2">
+                            <span class="material-symbols-outlined text-emerald-700 text-sm shrink-0 mt-0.5">handshake</span>
+                            <span><strong>Keramahan Warga:</strong> Bertegur sapa salam santun saat bertemu tetangga dusun.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="material-symbols-outlined text-emerald-700 text-sm shrink-0 mt-0.5">bedtime</span>
+                            <span><strong>Jam Tenang Malam:</strong> Menjaga ketenangan dusun di atas pukul 22.00 WIB.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="material-symbols-outlined text-emerald-700 text-sm shrink-0 mt-0.5">checkroom</span>
+                            <span><strong>Busana Sopan:</strong> Menghormati norma berpakaian santun saat berkeliling area desa.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="material-symbols-outlined text-emerald-700 text-sm shrink-0 mt-0.5">delete_outline</span>
+                            <span><strong>Kelestarian Lingkungan:</strong> Tidak membuang sampah sembarangan dan menjaga kemurnian alam.</span>
+                        </li>
+                    </ul>
+                </div>
+
             </aside>
         </div>
     </section>
