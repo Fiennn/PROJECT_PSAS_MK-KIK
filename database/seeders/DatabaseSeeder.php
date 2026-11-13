@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
             FasilitasSeeder::class,
             HomestaySeeder::class,
             BookingSeeder::class,
+            ArShelterSeeder::class,
         ]);
     }
 }
